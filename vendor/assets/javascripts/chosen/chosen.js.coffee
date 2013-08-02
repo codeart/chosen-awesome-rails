@@ -172,12 +172,16 @@ class Chosen
 
     @$dropdown.bind "mouseover", "li.chosen-option", (evt) => @dropdown_mouseover(evt)
     @$dropdown.bind "mousedown", "li.chosen-option", (evt) => @dropdown_mousedown(evt)
+    @$container.addClass("opened")
+    @$dropdown.addClass("opened")
 
     return true
 
   close: ->
     return false unless @opened
 
+    @$container.removeClass("opened")
+    @$dropdown.removeClass("opened")
     @$dropdown.unbind "mouseover mousedown"
     @$dropdown.remove()
     @opened = false
