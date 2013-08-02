@@ -66,7 +66,7 @@ class Chosen.Multiple extends Chosen
 
     @deselect(option) if option
 
-    if $sibling
+    if $sibling and not @activated
       $sibling.find("a").trigger("focus")
     else
       @activate()

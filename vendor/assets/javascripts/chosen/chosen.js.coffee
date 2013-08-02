@@ -72,7 +72,7 @@ class Chosen
     @$container.$search_container = @$container.$choices.find("li.chosen-search-field")
     @$container.$search = @$container.$choices.find("input[type=text]").attr(tabindex: @target.tabindex || "0")
 
-    @$dropdown = $("<div class=\"chosen-dropdown\"><ul></ul></div>")
+    @$dropdown = $("<div class=\"chosen-dropdown\" unselectable=\"on\"><ul></ul></div>")
     @$dropdown.$list = @$dropdown.find("ul").first()
 
   bind_events: ->
@@ -172,6 +172,7 @@ class Chosen
 
     @$dropdown.bind "mouseover", "li.chosen-option", (evt) => @dropdown_mouseover(evt)
     @$dropdown.bind "mousedown", "li.chosen-option", (evt) => @dropdown_mousedown(evt)
+
     @$container.addClass("opened")
     @$dropdown.addClass("opened")
 
@@ -194,7 +195,7 @@ class Chosen
     @move_cursor_to(@parser.index_for(option)) if option
 
     evt.preventDefault()
-    evt.stopPropagation()
+    evt.stopImmediatePropagation()
 
   dropdown_mousedown: (evt) ->
     option = @parser.find_by_element(evt.target)
@@ -202,7 +203,7 @@ class Chosen
     @select(option) if option
 
     evt.preventDefault()
-    evt.stopPropagation()
+    evt.stopImmediatePropagation()
 
   keydown: (evt) ->
     code = evt.which ? evt.keyCode
