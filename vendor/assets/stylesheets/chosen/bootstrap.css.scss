@@ -15,6 +15,12 @@
   }
 }
 
+.chosen-container.disabled {
+  ul.chosen-choices {
+    background-color: #eee;
+  }
+}
+
 .chosen-container.focus {
   ul.chosen-choices {
     border-color: rgba(82, 168, 236, 0.8);
