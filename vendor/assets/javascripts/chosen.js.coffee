@@ -14,12 +14,20 @@ $.fn.extend({
 
       unless $this.data("chosen")
         $this.data('chosen',
-          if @multiple then new Chosen.Multiple(@, options) else new Chosen.Single(@, options))
+          if @multiple
+            new Chosen.Multiple($this, options)
+          else
+            new Chosen.Single($this, options)
+        )
     )
 })
 
 $(window).bind("resize", (evt) ->
   for chosen in Chosen.pool
-    if chosen.opened
-      chosen.update_dropdown_position()
+    chosen.update_dropdown_position() if chosen.opened
+)
+
+$(window).bind("scroll", (evt) ->
+  for chosen in Chosen.pool
+    chosen.close() if chosen.opened
 )

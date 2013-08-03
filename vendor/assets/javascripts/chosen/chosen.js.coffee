@@ -1,11 +1,11 @@
 $ = jQuery
 
 class Chosen
-  constructor: (@target, options = {}) ->
+  constructor: (@$target, options = {}) ->
     $.extend(@, $.extend($.extend($.extend({}, Chosen.defaults), @constructor.defaults), options))
 
-    @$target = $(@target)
     @$body = $("body")
+    @target = @$target[0]
     @parser = new Chosen.Parser(@$target)
 
     @allow_deselect = @is_multiple or (@parser.includes_blank() and @allow_deselect != false)
@@ -233,7 +233,7 @@ class Chosen
 
     return if [9, 13, 16, 27, 38, 40].indexOf(code) >= 0
 
-    if @ajax
+    if @ajax and @filter_has_changed()
       @get_updates()
     else
       @redraw_dropdown()
@@ -242,17 +242,21 @@ class Chosen
 
   redraw_dropdown: (data) ->
     @parser.update(data) unless data is undefined
-    @apply_filter()
+    changed = @apply_filter()
     @update_dropdown_position()
     @update_dropdown_content()
+    @move_cursor_to(0) if changed
 
   apply_filter: ->
-    return if @search_value is @$container.$search[0].value
-
-    @move_cursor_to(0)
+    return false unless @filter_has_changed()
 
     @search_value = @$container.$search[0].value
     @parser.apply_filter(@$container.$search[0].value)
+
+    true
+
+  filter_has_changed: ->
+    @search_value isnt @$container.$search[0].value
 
   update_dropdown_position: ->
     list = @$container.find("ul")
@@ -307,7 +311,7 @@ class Chosen
       0
 
   get_updates: ->
-    if @pending_request and this.pending_request.readyState isnt 4
+    if @pending_request and @pending_request.readyState isnt 4
       @pending_request.abort()
 
     data =
