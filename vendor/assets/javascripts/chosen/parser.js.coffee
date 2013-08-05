@@ -161,7 +161,6 @@ class Chosen.Parser
               if exact then length * 10 else if begin then length * 5 else if sub then length else -1
 
     @order()
-    return
 
   reset_filter: ->
     option.score = option.index * -1 for option in @all_options

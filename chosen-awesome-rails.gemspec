@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["heaven"]
   s.date = "2013-08-04"
-  s.description = "Chosen is a javascript library of select box enhancer for jQuery, integrates with Rails asset pipeline for easy of use."
+  s.description = "Chosen is a javascript library of select box enhancer for jQuery, integrates with Rails asset pipeline for ease of use."
   s.email = ["alex@codeart.pw"]
   s.files = [".gitignore", "Gemfile", "Gemfile.lock", "LICENSE.txt", "README.md", "Rakefile", "chosen-awesome-rails.gemspec", "lib/chosen-awesome-rails.rb", "lib/chosen-awesome-rails/engine.rb", "lib/chosen-awesome-rails/engine3.rb", "lib/chosen-awesome-rails/version.rb", "vendor/assets/images/chosen-arrow.gif", "vendor/assets/images/chosen-delete.png", "vendor/assets/javascripts/chosen.js.coffee", "vendor/assets/javascripts/chosen/chosen.js.coffee", "vendor/assets/javascripts/chosen/multiple.js.coffee", "vendor/assets/javascripts/chosen/parser.js.coffee", "vendor/assets/javascripts/chosen/single.js.coffee", "vendor/assets/stylesheets/chosen.css.scss", "vendor/assets/stylesheets/chosen/bootstrap.css.scss", "vendor/assets/stylesheets/chosen/default.css.scss"]
   s.homepage = "https://github.com/heaven/chosen-awesome-rails"
