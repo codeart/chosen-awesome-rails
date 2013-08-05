@@ -1,11 +1,11 @@
 $ = jQuery
 
 class Chosen
-  constructor: (@target, options = {}) ->
+  constructor: (@$target, options = {}) ->
     $.extend(@, $.extend($.extend($.extend({}, Chosen.defaults), @constructor.defaults), options))
 
-    @$target = $(@target)
     @$body = $("body")
+    @target = @$target[0]
     @parser = new Chosen.Parser(@$target)
 
     @allow_deselect = @is_multiple or (@parser.includes_blank() and @allow_deselect != false)
@@ -168,7 +168,7 @@ class Chosen
 
     @opened = true
 
-    @move_cursor_to(@parser.index_for(@cursor_option))
+    @move_selection_to(@parser.index_for(@cursor_option))
 
     @$dropdown.bind "mouseover", "li.chosen-option", (evt) => @dropdown_mouseover(evt)
     @$dropdown.bind "mousedown", "li.chosen-option", (evt) => @dropdown_mousedown(evt)
@@ -192,7 +192,7 @@ class Chosen
   dropdown_mouseover: (evt) ->
     option = @parser.find_by_element(evt.target)
 
-    @move_cursor_to(@parser.index_for(option)) if option
+    @move_selection_to(@parser.index_for(option)) if option
 
     evt.preventDefault()
     evt.stopImmediatePropagation()
@@ -212,7 +212,7 @@ class Chosen
       when 13
         if @opened
           @select(@cursor_option)
-          @move_cursor(1) if @is_multiple
+          @move_selection(1) if @is_multiple
         else
           @open()
         evt.preventDefault()
@@ -221,7 +221,7 @@ class Chosen
         evt.preventDefault()
       when 38, 40
         @open()
-        @move_cursor(code - 39)
+        @move_selection(code - 39)
         evt.preventDefault()
       else
         true
@@ -233,7 +233,7 @@ class Chosen
 
     return if [9, 13, 16, 27, 38, 40].indexOf(code) >= 0
 
-    if @ajax
+    if @ajax and @filter_has_changed()
       @get_updates()
     else
       @redraw_dropdown()
@@ -242,17 +242,10 @@ class Chosen
 
   redraw_dropdown: (data) ->
     @parser.update(data) unless data is undefined
-    @apply_filter()
+    changed = @apply_filter()
     @update_dropdown_position()
     @update_dropdown_content()
-
-  apply_filter: ->
-    return if @search_value is @$container.$search[0].value
-
-    @move_cursor_to(0)
-
-    @search_value = @$container.$search[0].value
-    @parser.apply_filter(@$container.$search[0].value)
+    @move_selection_to(0) if changed
 
   update_dropdown_position: ->
     list = @$container.find("ul")
@@ -268,14 +261,25 @@ class Chosen
   update_dropdown_content: ->
     @$dropdown.$list.html(@parser.to_html())
 
-  move_cursor: (dir) ->
+  apply_filter: ->
+    return false unless @filter_has_changed()
+
+    @search_value = @$container.$search[0].value
+    @parser.apply_filter(@$container.$search[0].value)
+
+    true
+
+  filter_has_changed: ->
+    @search_value isnt @$container.$search[0].value
+
+  move_selection: (dir) ->
     cursor = @parser.index_for(@cursor_option) + dir
     cursor = @parser.visible_options.length - 1 if cursor < 0
     cursor = 0 if cursor > @parser.visible_options.length - 1
 
-    @move_cursor_to(cursor)
+    @move_selection_to(cursor)
 
-  move_cursor_to: (position) ->
+  move_selection_to: (position) ->
     if @cursor_option
       @cursor_option.$listed.removeClass("active")
 
@@ -307,7 +311,7 @@ class Chosen
       0
 
   get_updates: ->
-    if @pending_request and this.pending_request.readyState isnt 4
+    if @pending_request and @pending_request.readyState isnt 4
       @pending_request.abort()
 
     data =

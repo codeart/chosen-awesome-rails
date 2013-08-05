@@ -13,48 +13,40 @@ class Chosen.Parser
     delete @$target
     return
 
-  parse: (selected_options) ->
+  parse: (selected_options = []) ->
     current_group_label = null
     group = null
-    self = @
 
-    @$target.find("option").each (index) ->
-      if @parentNode.nodeName is "OPTGROUP"
-        if current_group_label != @parentNode.label
-          current_group_label = @parentNode.label
+    @$target.find("option").each (index, option) =>
+      if option.parentNode.nodeName is "OPTGROUP"
+        if current_group_label != option.parentNode.label
+          current_group_label = option.parentNode.label
           group = $("<li class=\"chosen-group\">#{current_group_label}</li>")
       else
         group = null
 
       classes = ["chosen-option"]
       classes.push "group" if group
-      classes.push "selected" if @selected
-      classes.push "disabled" if @disabled
+      classes.push "selected" if option.selected
+      classes.push "disabled" if option.disabled
 
-      if selected_options and selected_options.length
-        selected = $.grep(selected_options, (o, i) => o.value is @value and o.label is @label )[0]
-      else
-        selected = null
+      selected = $.grep(selected_options, (o, i) =>
+        o.value is option.value and o.label is option.label)[0]
 
-      option =
+      @all_options.push
         $group: group
-        $listed: (selected and selected.$listed) or $("<li class=\"#{classes.join(' ')}\">#{@text || "&nbsp;"}</li>")
-        $choice: (selected and selected.$choise) or $("<li class=\"#{classes.join(' ')}\"><a href=\"javascript:void(0)\" class=\"chosen-delete\" tabindex=\"#{self.$target[0].tabindex || "0"}\"></a>#{@text || "&nbsp;"}</li>")
-        $option: (selected and selected.$option) or $(@)
-        label: @text
-        value: @value
-        selected: @selected
-        disabled: @disabled
-        blank: @value is "" and index is 0
+        $listed: (selected and selected.$listed) or $("<li class=\"#{classes.join(' ')}\">#{option.text || "&nbsp;"}</li>")
+        $choice: (selected and selected.$choise) or $("<li class=\"#{classes.join(' ')}\"><a href=\"javascript:void(0)\" class=\"chosen-delete\" tabindex=\"#{@$target[0].tabindex || "0"}\"></a>#{option.text || "&nbsp;"}</li>")
+        $option: (selected and selected.$option) or $(option)
+        blank: option.value is "" and index is 0
         index: index
         score: index * -1
+        label: option.text
+        value: option.value
+        selected: option.selected
+        disabled: option.disabled
 
-      self.all_options.push option
-
-      if not option.blank
-        self.visible_options.push option
-
-    return
+    @order()
 
   update: (data) ->
     selected_options = []
@@ -68,7 +60,7 @@ class Chosen.Parser
     @all_options = []
 
     for attrs in data
-      unless $.grep(selected_options, (o, i) => o.value is data.value and o.label is data.label ).length
+      unless $.grep(selected_options, (o, i) => o.value is attrs.value.toString() and o.label == attrs.label.toString() ).length
         @$target.append("<option value=\"#{attrs.value}\">#{attrs.label}</option>")
 
     @parse(selected_options)
@@ -176,9 +168,8 @@ class Chosen.Parser
     return
 
   order: ->
-    @all_options = @all_options.sort((a, b) ->
+    @all_options = @all_options.sort (a, b) ->
       if a.score > b.score then -1 else if a.score < b.score then 1 else 0
-    )
 
     @visible_options = []
 
