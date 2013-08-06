@@ -47,6 +47,7 @@ class Chosen.Parser
         disabled: option.disabled
 
     @order()
+    return
 
   update: (data) ->
     selected_options = []
@@ -64,6 +65,7 @@ class Chosen.Parser
         @$target.append("<option value=\"#{attrs.value}\">#{attrs.label}</option>")
 
     @parse(selected_options)
+    return
 
   to_html: ->
     last_group = null
@@ -113,17 +115,13 @@ class Chosen.Parser
 
     return
 
-  select_all: ->
-    for option in @all_options
-      @select(option)
-
-  deselect_all: ->
-    for option in @all_options
-      @deselect(option)
-
   selected: ->
-    $.grep @all_options, (option) ->
+    $.grep @visible_options, (option) ->
       option and option.selected
+
+  not_selected: ->
+    $.grep @visible_options, (option) ->
+      option and not option.selected
 
   includes_blank: ->
     not not @blank_option()
@@ -161,6 +159,7 @@ class Chosen.Parser
               if exact then length * 10 else if begin then length * 5 else if sub then length else -1
 
     @order()
+    return
 
   reset_filter: ->
     option.score = option.index * -1 for option in @all_options

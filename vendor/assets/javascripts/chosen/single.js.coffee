@@ -13,6 +13,8 @@ class Chosen.Single extends Chosen
 
       @$container.append(@$container.$reset)
 
+    return
+
   bind_events: ->
     super
 
@@ -24,13 +26,18 @@ class Chosen.Single extends Chosen
       @$container.$reset.bind "click", (evt) =>
         @deselect()
         @load()
+        @activate()
         evt.stopImmediatePropagation()
+
+    return
 
   unbind_events: ->
     super
 
     if @allow_deselect
       @$container.$reset.unbind()
+
+    return
 
   set_default_value: ->
     selected = @parser.selected()[0]
@@ -41,27 +48,39 @@ class Chosen.Single extends Chosen
     else
       @$container.addClass("placeholder")
 
-  deselect: (option) ->
-    @parser.deselect_all()
+    return
 
-    @close() if @opened
-    @activate()
+  deselect: (option) ->
+    @parser.deselect(option || @parser.selected()[0])
+
+    @set_default_value()
+    @close()
 
     @$target.trigger("change")
+    return
 
   select: (option) ->
     return false if not option or option.disabled or option.selected
 
-    @parser.deselect_all()
+    @parser.deselect(@parser.selected()[0])
     @parser.select(option)
 
     @set_default_value()
     @close()
 
     @$target.trigger("change")
+    return
+
+  deselect_all: ->
+    @deselect()
+    return
+
+  select_all: ->
+    return
 
   load: ->
     @set_default_value()
+    return
 
   @defaults:
     is_multiple: false

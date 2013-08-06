@@ -120,8 +120,9 @@ class Chosen
     return true
 
   enable: ->
+    @$target.removeAttr("disabled")
+    @$container.$search.removeAttr("disabled")
     @$container.removeClass("disabled")
-    @$container.$search[0].disabled = false
     @$container.find("a").each(-> $(@).attr(tabindex: @tabindex))
 
     @bind_events()
@@ -130,6 +131,7 @@ class Chosen
 
   disable: ->
     @close()
+    @blur()
     @unbind_events()
 
     @$container.find("a").each( ->
@@ -139,8 +141,9 @@ class Chosen
       $link.attr(tabindex: "-1")
     )
 
-    @$container.$search[0].disabled = true
     @$container.addClass("disabled")
+    @$container.$search.attr(disabled: "disabled")
+    @$target.attr(disabled: "disabled")
 
     return true
 
@@ -150,6 +153,8 @@ class Chosen
     @activated = true
     @$container.addClass("focus")
 
+    return true
+
   blur: (evt) ->
     return unless @activated
 
@@ -157,6 +162,8 @@ class Chosen
     @close()
     @activated = false
     @$container.removeClass("focus")
+
+    return true
 
   open: ->
     return false if @opened
@@ -196,6 +203,7 @@ class Chosen
 
     evt.preventDefault()
     evt.stopImmediatePropagation()
+    return
 
   dropdown_mousedown: (evt) ->
     option = @parser.find_by_element(evt.target)
@@ -204,6 +212,7 @@ class Chosen
 
     evt.preventDefault()
     evt.stopImmediatePropagation()
+    return
 
   keydown: (evt) ->
     code = evt.which ? evt.keyCode
@@ -234,11 +243,12 @@ class Chosen
     return if [9, 13, 16, 27, 38, 40].indexOf(code) >= 0
 
     if @ajax and @filter_has_changed()
-      @get_updates()
+      @pull_updates()
     else
       @redraw_dropdown()
 
     @open()
+    return
 
   redraw_dropdown: (data) ->
     @parser.update(data) unless data is undefined
@@ -246,6 +256,7 @@ class Chosen
     @update_dropdown_position()
     @update_dropdown_content()
     @move_selection_to(0) if changed
+    return
 
   update_dropdown_position: ->
     list = @$container.find("ul")
@@ -258,8 +269,11 @@ class Chosen
       top: "#{offsets.top + height}px"
       width: "#{width}px"
 
+    return
+
   update_dropdown_content: ->
     @$dropdown.$list.html(@parser.to_html())
+    return
 
   apply_filter: ->
     return false unless @filter_has_changed()
@@ -278,6 +292,7 @@ class Chosen
     cursor = 0 if cursor > @parser.visible_options.length - 1
 
     @move_selection_to(cursor)
+    return
 
   move_selection_to: (position) ->
     if @cursor_option
@@ -295,6 +310,8 @@ class Chosen
     if top >= list_height + list_scroll or list_scroll >= top
       @$dropdown.scrollTop($element.position().top)
 
+    return
+
   get_caret_position: ->
     field = @$container.$search[0]
 
@@ -310,14 +327,14 @@ class Chosen
     else
       0
 
-  get_updates: ->
+  pull_updates: ->
     if @pending_request and @pending_request.readyState isnt 4
       @pending_request.abort()
 
     data =
       query: @$container.$search[0].value
 
-    @pending_request = $.ajax(
+    @pending_request = $.ajax
       url: @ajax.url
       type: @ajax.type or "get"
       dataType: @ajax.dataType or "json"
@@ -325,7 +342,8 @@ class Chosen
       async: @ajax.async or true
       success: (data) =>
         @redraw_dropdown(data)
-    )
+
+    return @pending_request
 
   @is_crappy_browser: (version) ->
     window.navigator.appName == "Microsoft Internet Explorer" and document.documentMode <= version

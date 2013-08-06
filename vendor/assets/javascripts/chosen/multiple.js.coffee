@@ -10,13 +10,16 @@ class Chosen.Multiple extends Chosen
     option.$choice.find("a").unbind().
       bind("mousedown", -> false).
       bind("click", (evt) => @deselect_choice(evt))
+    return
 
   set_default_value: ->
     @$container.$search[0].value = ""
+    return
 
   dropdown_mousedown: ->
     @reset_pending_option()
     super
+    return
 
   keydown: (evt) ->
     code = evt.which ? evt.keyCode
@@ -74,6 +77,8 @@ class Chosen.Multiple extends Chosen
     evt.preventDefault()
     evt.stopPropagation()
 
+    return
+
   deselect: (option) ->
     @parser.deselect(option)
 
@@ -82,6 +87,7 @@ class Chosen.Multiple extends Chosen
     @update_dropdown_position() if @opened
 
     @$target.trigger("change")
+    return
 
   select: (option) ->
     return false if not option or option.disabled or option.selected
@@ -93,11 +99,26 @@ class Chosen.Multiple extends Chosen
     @update_dropdown_position() if @opened
 
     @$target.trigger("change")
+    return
+
+  deselect_all: ->
+    for option in @parser.selected()
+      @deselect(option)
+
+    return
+
+  select_all: ->
+    for option in @parser.not_selected()
+      @select(option)
+
+    return
 
   load: ->
     for option in @parser.selected()
       @bind_option_events(option)
       @$container.$search_container.before(option.$choice)
+
+    return
 
   @defaults:
     is_multiple: true
