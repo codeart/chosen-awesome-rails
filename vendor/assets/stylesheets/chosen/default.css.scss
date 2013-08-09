@@ -122,7 +122,7 @@ $placeholder_color: #989898;
   ul.chosen-choices {
     li.chosen-option {
       padding: 0 5px;
-      margin: -1px 6px 4px -3px;
+      margin: 3px 0 0 3px;
       border: 1px solid #aaa;
       border-radius: 3px;
       background-color: #e4e4e4;
@@ -138,7 +138,7 @@ $placeholder_color: #989898;
       > a.chosen-delete {
         position: relative;
         float: left;
-        margin: 6px 5px 0 0;
+        margin: 6px 3px 0 0;
       }
     }
 
