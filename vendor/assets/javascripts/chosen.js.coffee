@@ -25,9 +25,13 @@ $.fn.extend({
 $(window).bind("resize", (evt) ->
   for chosen in Chosen.pool
     chosen.update_dropdown_position() if chosen.opened
+
+  return
 )
 
 $(window).bind("scroll", (evt) ->
   for chosen in Chosen.pool
     chosen.close() if chosen.opened
+
+  return
 )
