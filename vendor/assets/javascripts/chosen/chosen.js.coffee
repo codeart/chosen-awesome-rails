@@ -58,9 +58,11 @@ class Chosen
     classes.push "rtl" if @is_rtl
     classes.push @target.className if @inherit_classes and @target.className
 
+    width = if @width? then @width else "#{@target.offsetWidth}px"
+
     container_props =
       class: classes.join ' '
-      style: "width: #{if @width? then @width else "#{@target.offsetWidth}px"};"
+      style: "width: #{width}; min-width: #{width}; max-width: #{width}"
 
     container_props.title = @target.title if @target.title.length
     container_props.id = @target.id.replace(/[^\w]/g, '-') + "-chosen" if @target.id.length
