@@ -77,7 +77,7 @@ class Chosen.Multiple extends Chosen
     evt.preventDefault()
     evt.stopPropagation()
 
-    return
+    return @
 
   deselect: (option) ->
     @parser.deselect(option)
@@ -87,10 +87,10 @@ class Chosen.Multiple extends Chosen
     @update_dropdown_position() if @opened
 
     @$target.trigger("change")
-    return
+    return @
 
   select: (option) ->
-    return false if not option or option.disabled or option.selected
+    return @ if not option or option.disabled or option.selected
 
     @parser.select(option)
     @$container.$search_container.before(option.$choice)
@@ -99,26 +99,26 @@ class Chosen.Multiple extends Chosen
     @update_dropdown_position() if @opened
 
     @$target.trigger("change")
-    return
+    return @
 
   deselect_all: ->
     for option in @parser.selected()
       @deselect(option)
 
-    return
+    return @
 
   select_all: ->
     for option in @parser.not_selected()
       @select(option)
 
-    return
+    return @
 
   load: ->
     for option in @parser.selected()
       @bind_option_events(option)
       @$container.$search_container.before(option.$choice)
 
-    return
+    return @
 
   @defaults:
     is_multiple: true

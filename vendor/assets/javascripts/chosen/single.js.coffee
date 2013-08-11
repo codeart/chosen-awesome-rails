@@ -57,10 +57,10 @@ class Chosen.Single extends Chosen
     @close()
 
     @$target.trigger("change")
-    return
+    return @
 
   select: (option) ->
-    return false if not option or option.disabled or option.selected
+    return @ if not option or option.disabled or option.selected
 
     @parser.deselect(@parser.selected()[0])
     @parser.select(option)
@@ -69,18 +69,18 @@ class Chosen.Single extends Chosen
     @close()
 
     @$target.trigger("change")
-    return
+    return @
 
   deselect_all: ->
     @deselect()
-    return
+    return @
 
   select_all: ->
-    return
+    return @
 
   load: ->
     @set_default_value()
-    return
+    return @
 
   @defaults:
     is_multiple: false

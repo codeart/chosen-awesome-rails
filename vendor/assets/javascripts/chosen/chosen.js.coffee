@@ -113,13 +113,11 @@ class Chosen
 
   activate: ->
     @$container.$search.trigger("focus")
-
-    return true
+    return @
 
   deactivate: ->
     @$container.$search.trigger("blur")
-
-    return true
+    return @
 
   enable: ->
     @$target.removeAttr("disabled")
@@ -128,8 +126,7 @@ class Chosen
     @$container.find("a").each(-> $(@).attr(tabindex: @tabindex))
 
     @bind_events()
-
-    return true
+    return @
 
   disable: ->
     @close()
@@ -147,28 +144,28 @@ class Chosen
     @$container.$search.attr(disabled: "disabled")
     @$target.attr(disabled: "disabled")
 
-    return true
+    return @
 
   focus: (evt) ->
-    return if @activated
+    return @ if @activated
 
     @activated = true
     @$container.addClass("focus")
 
-    return true
+    return @
 
   blur: (evt) ->
-    return unless @activated
+    return @ unless @activated
 
     @set_default_value()
     @close()
     @activated = false
     @$container.removeClass("focus")
 
-    return true
+    return @
 
   open: ->
-    return false if @opened
+    return @ if @opened
 
     @redraw_dropdown()
 
@@ -185,10 +182,10 @@ class Chosen
     @$container.addClass("opened")
     @$dropdown.addClass("opened")
 
-    return true
+    return @
 
   close: ->
-    return false unless @opened
+    return @ unless @opened
 
     @$container.removeClass("opened")
     @$dropdown.removeClass("opened")
@@ -196,7 +193,7 @@ class Chosen
     @$dropdown.remove()
     @opened = false
 
-    return true
+    return @
 
   dropdown_mouseover: (evt) ->
     option = @parser.find_by_element(evt.target)
@@ -330,6 +327,8 @@ class Chosen
       0
 
   pull_updates: ->
+    return @ unless @ajax
+
     if @pending_request and @pending_request.readyState isnt 4
       @pending_request.abort()
 
@@ -345,7 +344,7 @@ class Chosen
       success: (data) =>
         @redraw_dropdown(data)
 
-    return @pending_request
+    return @
 
   @is_crappy_browser: (version) ->
     window.navigator.appName == "Microsoft Internet Explorer" and document.documentMode <= version
