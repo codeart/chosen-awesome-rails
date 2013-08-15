@@ -36,7 +36,7 @@ class Chosen.Parser
       @all_options.push
         $group: group
         $listed: (selected and selected.$listed) or $("<li class=\"#{classes.join(' ')}\">#{option.text || "&nbsp;"}</li>")
-        $choice: (selected and selected.$choise) or $("<li class=\"#{classes.join(' ')}\"><a href=\"javascript:void(0)\" class=\"chosen-delete\" tabindex=\"#{@$target[0].tabindex || "0"}\"></a>#{option.text || "&nbsp;"}</li>")
+        $choice: (selected and selected.$choise) or $("<li class=\"#{classes.join(' ')}\"><a href=\"javascript:void(0)\" class=\"chosen-delete\" tabindex=\"#{@$target[0].tabindex || "0"}\">×</a>#{option.text || "&nbsp;"}</li>")
         $option: (selected and selected.$option) or $(option)
         blank: option.value is "" and index is 0
         index: index

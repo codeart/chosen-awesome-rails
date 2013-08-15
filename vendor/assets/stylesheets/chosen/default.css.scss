@@ -1,5 +1,5 @@
 $arrow_image_path: image_path('chosen-arrow.gif');
-$delete_image_path: image_path('chosen-delete.png');
+
 $border_color_default: #ccc;
 $border_color_active: rgba(82, 168, 236, 1);
 $border_color_disabled: #ccc;
@@ -27,22 +27,23 @@ $placeholder_color: #989898;
 
   > a.chosen-delete {
     position: absolute;
-    right: 16px;
-    top: 11px;
+    right: 12px;
+    top: 4px;
   }
 
   a.chosen-delete:hover {
-    background-position: 0 -9px;
+    color: #333;
+    text-decoration: none;
   }
 
   a.chosen-delete {
-    height: 8px;
-    width: 8px;
+    padding: 2px 3px 2px 4px;
+    line-height: 1;
+    color: #777;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
-    background-repeat: no-repeat;
-    background-position: 0 0px;
-    background-image: url($delete_image_path);
-    background-color: transparent;
+    text-decoration: none;
   }
 
   ul.chosen-choices {
@@ -121,8 +122,9 @@ $placeholder_color: #989898;
 .chosen-container.multiple {
   ul.chosen-choices {
     li.chosen-option {
-      padding: 0 5px;
+      padding: 0 5px 0 0;
       margin: 3px 0 0 3px;
+      line-height: 1.5;
       border: 1px solid #aaa;
       border-radius: 3px;
       background-color: #e4e4e4;
@@ -138,7 +140,6 @@ $placeholder_color: #989898;
       > a.chosen-delete {
         position: relative;
         float: left;
-        margin: 6px 3px 0 0;
       }
     }
 

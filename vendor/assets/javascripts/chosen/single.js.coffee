@@ -5,9 +5,10 @@ class Chosen.Single extends Chosen
     super
 
     if @allow_deselect
-      @$container.$reset = $("<a></a>",
-        class: "chosen-delete",
-        href: "javascript:void(0)",
+      @$container.$reset = $("<a />",
+        html: "×"
+        class: "chosen-delete"
+        href: "javascript:void(0)"
         tabindex: @target.tabindex || "0"
       )
 
