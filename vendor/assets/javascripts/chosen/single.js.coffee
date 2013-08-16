@@ -7,8 +7,8 @@ class Chosen.Single extends Chosen
     if @allow_deselect
       @$container.$reset = $("<a />",
         html: "×"
-        class: "chosen-delete"
         href: "javascript:void(0)"
+        class: "chosen-delete"
         tabindex: @target.tabindex || "0"
       )
 

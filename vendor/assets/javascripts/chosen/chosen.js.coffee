@@ -6,7 +6,7 @@ class Chosen
 
     @$body = $("body")
     @target = @$target[0]
-    @parser = new Chosen.Parser(@$target)
+    @parser = new Chosen.Parser(@)
 
     @allow_deselect = @is_multiple or (@parser.includes_blank() and @allow_deselect != false)
     @activated = false

@@ -1,7 +1,7 @@
 $ = jQuery
 
 class Chosen.Parser
-  constructor: (@$target)->
+  constructor: (@chosen)->
     @all_options = []
     @visible_options = []
 
@@ -10,14 +10,20 @@ class Chosen.Parser
   destroy: ->
     delete @all_options
     delete @visible_options
-    delete @$target
+    delete @chosen
     return
 
   parse: (selected_options = []) ->
     current_group_label = null
     group = null
 
-    @$target.find("option").each (index, option) =>
+    link_params =
+      html: "×"
+      href: "javascript:void(0)"
+      class: "chosen-delete"
+      tabindex: @chosen.$target[0].tabindex || "0"
+
+    @chosen.$target.find("option").each (index, option) =>
       if option.parentNode.nodeName is "OPTGROUP"
         if current_group_label != option.parentNode.label
           current_group_label = option.parentNode.label
@@ -25,18 +31,23 @@ class Chosen.Parser
       else
         group = null
 
-      classes = ["chosen-option"]
-      classes.push "group" if group
-      classes.push "selected" if option.selected
-      classes.push "disabled" if option.disabled
+      classes = "chosen-option"
+      classes << " group" if group
+      classes << " selected" if option.selected
+      classes << " disabled" if option.disabled
 
       selected = $.grep(selected_options, (o, i) =>
         o.value is option.value and o.label is option.label)[0]
 
+      text = if typeof @chosen.formatter is "function"
+        @chosen.formatter(option)
+      else
+        [option.text, option.text]
+
       @all_options.push
         $group: group
-        $listed: (selected and selected.$listed) or $("<li class=\"#{classes.join(' ')}\">#{option.text || "&nbsp;"}</li>")
-        $choice: (selected and selected.$choise) or $("<li class=\"#{classes.join(' ')}\"><a href=\"javascript:void(0)\" class=\"chosen-delete\" tabindex=\"#{@$target[0].tabindex || "0"}\">×</a>#{option.text || "&nbsp;"}</li>")
+        $listed: (selected and selected.$listed) or $("<li />", class: classes, html: text[0])
+        $choice: (selected and selected.$choise) or $("<li />", class: classes, html: [$("<a />", link_params), text[1]])
         $option: (selected and selected.$option) or $(option)
         blank: option.value is "" and index is 0
         index: index
@@ -62,7 +73,7 @@ class Chosen.Parser
 
     for attrs in data
       unless $.grep(selected_options, (o, i) => o.value is attrs.value.toString() and o.label == attrs.label.toString() ).length
-        @$target.append("<option value=\"#{attrs.value}\">#{attrs.label}</option>")
+        @chosen.$target.append("<option value=\"#{attrs.value}\">#{attrs.label}</option>")
 
     @parse(selected_options)
     return @
