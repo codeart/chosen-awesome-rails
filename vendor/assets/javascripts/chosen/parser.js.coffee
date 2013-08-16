@@ -32,9 +32,9 @@ class Chosen.Parser
         group = null
 
       classes = "chosen-option"
-      classes << " group" if group
-      classes << " selected" if option.selected
-      classes << " disabled" if option.disabled
+      classes += " group" if group
+      classes += " selected" if option.selected
+      classes += " disabled" if option.disabled
 
       selected = $.grep(selected_options, (o, i) =>
         o.value is option.value and o.label is option.label)[0]
