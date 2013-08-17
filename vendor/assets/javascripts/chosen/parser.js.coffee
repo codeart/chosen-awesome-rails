@@ -77,7 +77,7 @@ class Chosen.Parser
 
     for attrs in data
       unless $.grep(selected_options, (o, i) => o.value is attrs.value.toString() and o.label == attrs.label.toString() ).length
-        @chosen.$target.append("<option />", value: attrs.value, html: attrs.label, data: { source: attrs })
+        @chosen.$target.append($("<option />", value: attrs.value, html: attrs.label, data: { source: attrs }))
 
     @parse(selected_options)
     return @
