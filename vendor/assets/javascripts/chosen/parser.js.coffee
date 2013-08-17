@@ -121,8 +121,6 @@ class Chosen.Parser
     @selectable_options.splice(index, 1) unless index is -1
     @selected_options.push(option)
 
-    @chosen.$target.trigger("change")
-
     return @
 
   deselect: (option) ->
@@ -137,8 +135,6 @@ class Chosen.Parser
     index = @selected_options.indexOf(option)
     @selected_options.splice(index, 1) unless index is -1
     @selectable_options.push(option)
-
-    @chosen.$target.trigger("change")
 
     return @
 

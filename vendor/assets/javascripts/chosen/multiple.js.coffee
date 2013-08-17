@@ -86,6 +86,7 @@ class Chosen.Multiple extends Chosen
 
     @update_dropdown_position() if @opened
 
+    @$target.trigger("change")
     return @
 
   select: (option) ->
@@ -97,6 +98,7 @@ class Chosen.Multiple extends Chosen
     @bind_option_events(option)
     @update_dropdown_position() if @opened
 
+    @$target.trigger("change")
     return @
 
   deselect_all: ->

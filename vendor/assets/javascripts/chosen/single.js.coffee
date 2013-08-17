@@ -57,6 +57,7 @@ class Chosen.Single extends Chosen
     @set_default_value()
     @close()
 
+    @$target.trigger("change")
     return @
 
   select: (option) ->
@@ -68,6 +69,7 @@ class Chosen.Single extends Chosen
     @set_default_value()
     @close()
 
+    @$target.trigger("change")
     return @
 
   deselect_all: ->
