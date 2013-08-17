@@ -18,7 +18,7 @@ $.fn.extend({
             new Chosen.Multiple($this, options)
           else
             new Chosen.Single($this, options)
-        )
+        ).trigger("chosen:ready")
     )
 })
 
