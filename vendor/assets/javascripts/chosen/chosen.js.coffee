@@ -174,7 +174,7 @@ class Chosen
 
     @opened = true
 
-    @move_selection_to(@parser.index_for(@cursor_option))
+    @move_selection_to(@parser.index_of(@cursor_option))
 
     @$dropdown.bind "mouseover", "li.chosen-option", (evt) => @dropdown_mouseover(evt)
     @$dropdown.bind "mousedown", "li.chosen-option", (evt) => @dropdown_mousedown(evt)
@@ -198,7 +198,7 @@ class Chosen
   dropdown_mouseover: (evt) ->
     option = @parser.find_by_element(evt.target)
 
-    @move_selection_to(@parser.index_for(option)) if option
+    @move_selection_to(@parser.index_of(option)) if option
 
     evt.preventDefault()
     evt.stopImmediatePropagation()
@@ -286,18 +286,22 @@ class Chosen
     @search_value isnt @$container.$search[0].value
 
   move_selection: (dir) ->
-    cursor = @parser.index_for(@cursor_option) + dir
-    cursor = @parser.visible_options.length - 1 if cursor < 0
-    cursor = 0 if cursor > @parser.visible_options.length - 1
+    cursor = @parser.index_of(@cursor_option) + dir
+    cursor = @parser.available_options.length - 1 if cursor < 0
+    cursor = 0 if cursor > @parser.available_options.length - 1
 
     @move_selection_to(cursor)
-    return
 
-  move_selection_to: (position) ->
+    if @cursor_option and @cursor_option.selected and @parser.selectable_options.length
+      return @move_selection(dir)
+
+    return @
+
+  move_selection_to: (cursor) ->
     if @cursor_option
       @cursor_option.$listed.removeClass("active")
 
-    @cursor_option = @parser.visible_options[position]
+    @cursor_option = @parser.available_options[cursor]
 
     return unless @cursor_option
 
@@ -309,7 +313,7 @@ class Chosen
     if top >= list_height + list_scroll or list_scroll >= top
       @$dropdown.scrollTop($element.position().top)
 
-    return
+    return @
 
   get_caret_position: ->
     field = @$container.$search[0]

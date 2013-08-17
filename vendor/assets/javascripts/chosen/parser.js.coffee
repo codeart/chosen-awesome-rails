@@ -3,13 +3,17 @@ $ = jQuery
 class Chosen.Parser
   constructor: (@chosen)->
     @all_options = []
-    @visible_options = []
+    @available_options = []
+    @selected_options = []
+    @selectable_options = []
 
     @parse()
 
   destroy: ->
     delete @all_options
-    delete @visible_options
+    delete @available_options
+    delete @selected_options
+    delete @selectable_options
     delete @chosen
     return
 
@@ -27,7 +31,7 @@ class Chosen.Parser
       if option.parentNode.nodeName is "OPTGROUP"
         if current_group_label != option.parentNode.label
           current_group_label = option.parentNode.label
-          group = $("<li class=\"chosen-group\">#{current_group_label}</li>")
+          group = $("<li />", class: "chosen-group", html: current_group_label)
       else
         group = null
 
@@ -82,7 +86,7 @@ class Chosen.Parser
     last_group = null
     list = []
 
-    for option in @visible_options
+    for option in @available_options
       if option.$group
         if not last_group or (last_group and last_group.text() isnt option.$group.text())
           last_group = option.$group.clone()
@@ -101,8 +105,8 @@ class Chosen.Parser
 
     return null
 
-  index_for: (option) ->
-    if option then @visible_options.indexOf(option) else 0
+  index_of: (option) ->
+    if option then @available_options.indexOf(option) else 0
 
   select: (option) ->
     return @ unless option
@@ -112,6 +116,12 @@ class Chosen.Parser
     option.$listed.addClass("selected")
     option.$choice.addClass("selected")
     option.selected = true
+
+    index = @selectable_options.indexOf(option)
+    @selectable_options.splice(index, 1) unless index is -1
+    @selected_options.push(option)
+
+    @chosen.$target.trigger("change")
 
     return @
 
@@ -124,14 +134,20 @@ class Chosen.Parser
     option.$choice.removeClass("selected")
     option.selected = false
 
+    index = @selected_options.indexOf(option)
+    @selected_options.splice(index, 1) unless index is -1
+    @selectable_options.push(option)
+
+    @chosen.$target.trigger("change")
+
     return @
 
   selected: ->
-    $.grep @visible_options, (option) ->
+    $.grep @available_options, (option) ->
       option and option.selected
 
   not_selected: ->
-    $.grep @visible_options, (option) ->
+    $.grep @available_options, (option) ->
       option and not option.selected
 
   includes_blank: ->
@@ -146,14 +162,18 @@ class Chosen.Parser
   apply_filter: (value) ->
     @reset_filter()
 
-    length = @all_options.length
+    if (value = $.trim(value))
+      scores = [
+        @all_options.length * 12, @all_options.length * 9
+        @all_options.length * 6, @all_options.length * 3
+      ]
 
-    if $.trim(value).length
-      expressions = $.map(value.replace(Parser.escape, "\\$&").split(" "), (word, index) ->
+      query = value.replace(Parser.escape_exp, "\\$&").split(" ")
+
+      expressions_collection = $.map(query, (word, index) ->
         return [[
-          new RegExp(word, "i")
-          new RegExp("^#{word}", "i")
-          new RegExp("^#{word}$", "i")
+          new RegExp("^#{word}$", "i"), new RegExp("^#{word}", "i")
+          new RegExp("#{word}$", "i"), new RegExp(word, "i")
         ]]
       )
 
@@ -161,13 +181,13 @@ class Chosen.Parser
         words = option.label.split(" ")
 
         for word in words
-          for exp in expressions
-            exact = word.match(exp[2])
-            begin = if exact then false else word.match(exp[1])
-            sub = if begin then false else word.match(exp[0])
-
-            option.score +=
-              if exact then length * 10 else if begin then length * 5 else if sub then length else -1
+          for expressions in expressions_collection
+            for expression, index in expressions
+              if word.match(expression)
+                option.score += scores[index]
+                break
+              else if index is expressions.length - 1
+                option.score += -1
 
     @order()
     return @
@@ -180,12 +200,17 @@ class Chosen.Parser
     @all_options = @all_options.sort (a, b) ->
       if a.score > b.score then -1 else if a.score < b.score then 1 else 0
 
-    @visible_options = []
+    @available_options = []
 
     for option in @all_options
       if not option.blank
-        @visible_options.push(option)
+        @available_options.push(option)
+
+        if option.selected
+          @selected_options.push(option)
+        else
+          @selectable_options.push(option)
 
     return @
 
-  @escape: /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g
+  @escape_exp: /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g
