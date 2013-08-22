@@ -11,5 +11,3 @@ case ::Rails.version.to_s
   when /^3\.[12]/
     require 'chosen-awesome-rails/engine3'
 end
-
-require 'compass-rails'
