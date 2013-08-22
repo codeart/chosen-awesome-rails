@@ -22,14 +22,12 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<railties>, [">= 3.0"])
       s.add_runtime_dependency(%q<coffee-rails>, [">= 3.2"])
       s.add_runtime_dependency(%q<sass-rails>, [">= 3.2"])
-      s.add_runtime_dependency(%q<compass-rails>, [">= 1.0"])
       s.add_development_dependency(%q<bundler>, [">= 1.0"])
       s.add_development_dependency(%q<rails>, [">= 3.0"])
     else
       s.add_dependency(%q<railties>, [">= 3.0"])
       s.add_dependency(%q<coffee-rails>, [">= 3.2"])
       s.add_dependency(%q<sass-rails>, [">= 3.2"])
-      s.add_dependency(%q<compass-rails>, [">= 1.0"])
       s.add_dependency(%q<bundler>, [">= 1.0"])
       s.add_dependency(%q<rails>, [">= 3.0"])
     end
@@ -37,7 +35,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<railties>, [">= 3.0"])
     s.add_dependency(%q<coffee-rails>, [">= 3.2"])
     s.add_dependency(%q<sass-rails>, [">= 3.2"])
-    s.add_dependency(%q<compass-rails>, [">= 1.0"])
     s.add_dependency(%q<bundler>, [">= 1.0"])
     s.add_dependency(%q<rails>, [">= 3.0"])
   end
