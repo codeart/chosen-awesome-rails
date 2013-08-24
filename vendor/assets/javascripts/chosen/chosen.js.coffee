@@ -23,10 +23,12 @@ class Chosen
   complete: ->
     Chosen.pool.push(@)
 
-    if @$target[0].disabled
+    if @target.disabled
+      @disabled = false
       @disable()
     else
-      @bind_events()
+      @disabled = true
+      @enable()
 
     @$target.hide().after(@$container)
 
@@ -120,29 +122,35 @@ class Chosen
     return @
 
   enable: ->
-    @$target.removeAttr("disabled")
-    @$container.$search.removeAttr("disabled")
-    @$container.removeClass("disabled")
-    @$container.find("a").each(-> $(@).attr(tabindex: @tabindex))
+    if @disabled
+      @$target.removeAttr("disabled")
+      @$container.$search.removeAttr("disabled")
+      @$container.removeClass("disabled")
+      @$container.find("a").each ->
+        $(@).attr(tabindex: @tabindex) if @tabindex
 
-    @bind_events()
+      @bind_events()
+      @disabled = false
+
     return @
 
   disable: ->
-    @close()
-    @blur()
-    @unbind_events()
+    unless @disabled
+      @close()
+      @blur()
+      @unbind_events()
 
-    @$container.find("a").each( ->
-      $link = $(@)
+      @$container.find("a").each( ->
+        $link = $(@)
 
-      @tabindex = $link.attr("tabindex")
-      $link.attr(tabindex: "-1")
-    )
+        @tabindex = $link.attr("tabindex")
+        $link.attr(tabindex: "-1")
+      )
 
-    @$container.addClass("disabled")
-    @$container.$search.attr(disabled: "disabled")
-    @$target.attr(disabled: "disabled")
+      @$container.addClass("disabled")
+      @$container.$search.attr(disabled: "disabled")
+      @$target.attr(disabled: "disabled")
+      @disabled = true
 
     return @
 
