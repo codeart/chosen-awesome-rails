@@ -62,9 +62,9 @@ class Chosen.Multiple extends Chosen
   deselect_choice: (evt) ->
     option = @parser.find_by_element(evt.target.parentNode)
 
-    $choise = $(evt.target.parentNode)
-    $next = $choise.next("li.chosen-option")
-    $prev = $choise.prev("li.chosen-option")
+    $choice = $(evt.target.parentNode)
+    $next = $choice.next("li.chosen-option")
+    $prev = $choice.prev("li.chosen-option")
     $sibling = if $next.length then $next else if $prev.length then $prev else null
 
     @deselect(option) if option

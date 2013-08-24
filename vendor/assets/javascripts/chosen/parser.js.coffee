@@ -18,8 +18,13 @@ class Chosen.Parser
     return
 
   parse: (selected_options = []) ->
+    formatter = @chosen.option_formatter || @default_formatter
     current_group_label = null
     group = null
+
+    @all_options = []
+    @selected_options = []
+    @selectable_options = []
 
     link_params =
       html: "×"
@@ -40,18 +45,13 @@ class Chosen.Parser
       classes += " selected" if option.selected
       classes += " disabled" if option.disabled
 
-      selected = $.grep(selected_options, (o, i) =>
-        o.value is option.value and o.label is option.label)[0]
+      selected = $.grep(selected_options, (o) => o.value is option.value and o.label is option.label)[0]
+      text = formatter(option)
 
-      text = if typeof @chosen.formatter is "function"
-        @chosen.formatter(option)
-      else
-        [option.text, option.text]
-
-      @all_options.push
+      option_obj =
         $group: group
         $listed: (selected and selected.$listed) or $("<li />", class: classes, html: text[0])
-        $choice: (selected and selected.$choise) or $("<li />", class: classes, html: [$("<a />", link_params), text[1]])
+        $choice: (selected and selected.$choice) or $("<li />", class: classes, html: [$("<a />", link_params), text[1]])
         $option: (selected and selected.$option) or $(option)
         blank: option.value is "" and index is 0
         index: index
@@ -61,10 +61,15 @@ class Chosen.Parser
         selected: option.selected
         disabled: option.disabled
 
+      @all_options.push option_obj
+      @selected_options.push option_obj if option.selected
+      @selectable_options.push option_obj unless option.selected
+
     @order()
     return @
 
   update: (data) ->
+    parser = @chosen.option_parser || @default_parser
     selected_options = []
 
     for option in @all_options
@@ -73,11 +78,10 @@ class Chosen.Parser
       else
         option.$option.remove()
 
-    @all_options = []
-
     for attrs in data
-      unless $.grep(selected_options, (o, i) => o.value is attrs.value.toString() and o.label == attrs.label.toString() ).length
-        @chosen.$target.append($("<option />", value: attrs.value, html: attrs.label, data: { source: attrs }))
+      parsed = parser(attrs)
+      unless $.grep(selected_options, (o) => o.value is parsed.value.toString() and o.label == parsed.html.toString() ).length
+        @chosen.$target.append($("<option />", parsed))
 
     @parse(selected_options)
     return @
@@ -202,11 +206,15 @@ class Chosen.Parser
       if not option.blank
         @available_options.push(option)
 
-        if option.selected
-          @selected_options.push(option)
-        else
-          @selectable_options.push(option)
-
     return @
+
+  default_parser: (attrs) ->
+    value: attrs.value
+    html: attrs.label
+    data: { source: attrs }
+
+  default_formatter: (option) ->
+    [option.text, option.text]
+
 
   @escape_exp: /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g
