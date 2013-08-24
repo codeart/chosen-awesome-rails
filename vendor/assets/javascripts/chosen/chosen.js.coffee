@@ -225,8 +225,8 @@ class Chosen
           @open()
         evt.preventDefault()
       when 27
-        @close()
         evt.preventDefault()
+        evt.stopPropagation()
       when 38, 40
         @open()
         @move_selection(code - 39)
@@ -239,14 +239,19 @@ class Chosen
   keyup: (evt) ->
     code = evt.which ? evt.keyCode
 
-    return if [9, 13, 16, 27, 38, 40].indexOf(code) >= 0
+    return if [9, 13, 16, 38, 40].indexOf(code) >= 0
 
-    if @ajax and @filter_has_changed()
-      @pull_updates()
+    if code is 27 and @opened
+      @close()
+      evt.stopPropagation()
     else
-      @redraw_dropdown()
+      if @ajax and @filter_has_changed()
+        @pull_updates()
+      else
+        @redraw_dropdown()
 
-    @open()
+      @open()
+
     return
 
   redraw_dropdown: (data) ->
