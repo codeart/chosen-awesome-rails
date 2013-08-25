@@ -358,6 +358,10 @@ class Chosen
       dataType: @ajax.dataType or "json"
       data: $.extend(@ajax.data || {}, data)
       async: @ajax.async or true
+      xhrFields: @ajax.xhrFields
+
+      beforeSend: (xhr) =>
+        @ajax.beforeSend(xhr) if typeof @ajax.beforeSend is "function"
       success: (data) =>
         @redraw_dropdown(data)
 
