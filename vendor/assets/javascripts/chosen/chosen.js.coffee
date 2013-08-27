@@ -67,7 +67,7 @@ class Chosen
       style: "width: #{width}; min-width: #{width}; max-width: #{width}"
 
     container_props.title = @target.title if @target.title.length
-    container_props.id = @target.id.replace(/[^\w]/g, '-') + "-chosen" if @target.id.length
+    container_props.id = @target.id.replace(/[^\w]/g, '-') + "-chosen" if @target.id
     placeholder = @$target.attr("placeholder") || @placeholder
 
     @$container = $("<div />", container_props)
@@ -76,8 +76,11 @@ class Chosen
     @$container.$search_container = @$container.$choices.find("li.chosen-search-field")
     @$container.$search = @$container.$choices.find("input[type=text]").attr(tabindex: @target.tabindex || "0")
 
-    @$dropdown = $("<div class=\"chosen-dropdown\" unselectable=\"on\"><ul></ul></div>")
+    @$dropdown = $("<div />", class: "chosen-dropdown", unselectable: "on", html: "<ul></ul>")
     @$dropdown.$list = @$dropdown.find("ul").first()
+    @$dropdown.$list.$no_results = $("<li />", class: "chosen-option no-results")
+    @$dropdown.$list.$start_typing = $("<li />", class: "chosen-option start-typing")
+    @$dropdown.$list.$add_new = null
 
   bind_events: ->
     if @target.id.length
@@ -284,7 +287,22 @@ class Chosen
     return
 
   update_dropdown_content: ->
+    if @allow_insertion and @$container.$search[0].value and not @parser.exact_matches().length
+      if @$dropdown.$list.$add_new
+        @parser.remove(@$dropdown.$list.$add_new)
+
+      @$dropdown.$list.$add_new = @parser.add(
+        value: @$container.$search[0].value
+        label: @$container.$search[0].value
+      )
+
+      @$dropdown.$list.$add_new.$listed.html("#{@$dropdown.$list.$add_new.value} (<b>new</b>)")
+    else if @$dropdown.$list.$add_new
+      @parser.remove(@$dropdown.$list.$add_new)
+      @$dropdown.$list.$add_new = null
+
     @$dropdown.$list.html(@parser.to_html())
+
     return
 
   apply_filter: ->
@@ -374,6 +392,7 @@ class Chosen
     not Chosen.is_crappy_browser(6)
 
   @defaults:
+    allow_insertion: false
     inherit_classes: true
     is_rtl: false
     no_result_text: "No results found"

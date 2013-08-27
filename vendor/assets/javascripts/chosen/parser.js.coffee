@@ -86,6 +86,48 @@ class Chosen.Parser
     @parse(selected_options)
     return @
 
+  add: (data) ->
+    formatter = @chosen.option_formatter || @default_formatter
+    classes = "chosen-option"
+
+    link_params =
+      html: "×"
+      href: "javascript:void(0)"
+      class: "chosen-delete"
+      tabindex: @chosen.$target[0].tabindex || "0"
+
+    option = $("<option />", value: data.value, html: data.label)
+    text = formatter(option[0])
+
+    option_obj =
+      $group: null
+      $listed: $("<li />", class: classes, html: text[0])
+      $choice: $("<li />", class: classes, html: [$("<a />", link_params), text[1]])
+      $option: option
+      blank: false
+      index: 0
+      score: 0
+      label: option[0].text
+      value: option[0].value
+      selected: false
+      disabled: false
+
+    @all_options.unshift option_obj
+    @available_options.unshift option_obj
+
+    option_obj
+
+  remove: (option) ->
+    return if option.selected
+
+    option.$listed.remove()
+    option.$choice.remove()
+    option.$option.remove()
+
+    for collection in [@all_options, @available_options, @selected_options, @selectable_options]
+      index = collection.indexOf(option)
+      collection.splice(index, 1) if index > -1
+
   to_html: ->
     last_group = null
     list = []
@@ -144,11 +186,15 @@ class Chosen.Parser
 
   selected: ->
     $.grep @available_options, (option) ->
-      option and option.selected
+      option.selected
 
   not_selected: ->
     $.grep @available_options, (option) ->
-      option and not option.selected
+      not option.selected
+
+  exact_matches: ->
+    $.grep @available_options, (option) ->
+      option.match_type is 0
 
   includes_blank: ->
     not not @blank_option()
@@ -184,6 +230,7 @@ class Chosen.Parser
           for expressions in expressions_collection
             for expression, index in expressions
               if word.match(expression)
+                option.match_type = index
                 option.score += scores[index]
                 break
               else if index is expressions.length - 1
