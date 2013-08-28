@@ -13,6 +13,7 @@ $color_disabled: #989898;
 $color_selected: #989898;
 $group_color: #a0a0a0;
 $placeholder_color: #989898;
+$color_active: #fff;
 
 .chosen-container {
   position: relative;
@@ -239,7 +240,7 @@ $placeholder_color: #989898;
     }
 
     li.chosen-option.active {
-      color: $color_default;
+      color: $color_active;
       background-color: $background_color_active;
     }
 

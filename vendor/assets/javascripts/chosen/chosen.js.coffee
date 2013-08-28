@@ -78,9 +78,7 @@ class Chosen
 
     @$dropdown = $("<div />", class: "chosen-dropdown", unselectable: "on", html: "<ul></ul>")
     @$dropdown.$list = @$dropdown.find("ul").first()
-    @$dropdown.$list.$no_results = $("<li />", class: "chosen-option no-results")
-    @$dropdown.$list.$start_typing = $("<li />", class: "chosen-option start-typing")
-    @$dropdown.$list.$add_new = null
+    @$dropdown.$list.suggestion = null
 
   bind_events: ->
     if @target.id.length
@@ -250,16 +248,13 @@ class Chosen
   keyup: (evt) ->
     code = evt.which ? evt.keyCode
 
-    return if [9, 13, 16, 38, 40].indexOf(code) >= 0
+    return if [9, 13, 16, 37, 38, 39, 40].indexOf(code) >= 0
 
     if code is 27 and @opened
       @close()
       evt.stopPropagation()
-    else
-      if @ajax and @filter_has_changed()
-        @pull_updates()
-      else
-        @redraw_dropdown()
+    else if @filter_has_changed()
+      if @ajax then @pull_updates() else @redraw_dropdown()
 
       @open()
 
@@ -267,10 +262,13 @@ class Chosen
 
   redraw_dropdown: (data) ->
     @parser.update(data) unless data is undefined
+
     changed = @apply_filter()
+
     @update_dropdown_position()
     @update_dropdown_content()
     @move_selection_to(0) if changed
+
     return
 
   update_dropdown_position: ->
@@ -287,23 +285,29 @@ class Chosen
     return
 
   update_dropdown_content: ->
-    if @allow_insertion and @$container.$search[0].value and not @parser.exact_matches().length
-      if @$dropdown.$list.$add_new
-        @parser.remove(@$dropdown.$list.$add_new)
+    @insert_suggestion()
+    @$dropdown.$list.html(@parser.to_html())
 
-      @$dropdown.$list.$add_new = @parser.add(
+    return
+
+  insert_suggestion: ->
+    return unless @allow_insertion
+
+    if @$dropdown.$list.suggestion
+      @parser.remove(@$dropdown.$list.suggestion)
+
+    if @$container.$search[0].value and not @parser.exact_matches().length
+      @$dropdown.$list.suggestion = suggestion = @parser.insert(
         value: @$container.$search[0].value
         label: @$container.$search[0].value
       )
 
-      @$dropdown.$list.$add_new.$listed.html("#{@$dropdown.$list.$add_new.value} (<b>new</b>)")
-    else if @$dropdown.$list.$add_new
-      @parser.remove(@$dropdown.$list.$add_new)
-      @$dropdown.$list.$add_new = null
+      value = "#{suggestion.value} (#{@locale.add_new})"
 
-    @$dropdown.$list.html(@parser.to_html())
-
-    return
+      suggestion.$listed.contents().last()[0].textContent = value
+      suggestion.$choice.contents().last()[0].textContent = value
+    else if @$dropdown.$list.suggestion
+      @$dropdown.$list.suggestion = null
 
   apply_filter: ->
     return false unless @filter_has_changed()
@@ -395,8 +399,10 @@ class Chosen
     allow_insertion: false
     inherit_classes: true
     is_rtl: false
-    no_result_text: "No results found"
-    start_type_text: "Start typing"
+    locale:
+      no_result: "No results found"
+      start_type: "Please start typing"
+      add_new: "add new"
 
   @pool: []
 

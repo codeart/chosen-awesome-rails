@@ -26,11 +26,7 @@ class Chosen.Parser
     @selected_options = []
     @selectable_options = []
 
-    link_params =
-      html: "×"
-      href: "javascript:void(0)"
-      class: "chosen-delete"
-      tabindex: @chosen.$target[0].tabindex || "0"
+    $reset_link = @build_reset_link()
 
     @chosen.$target.find("option").each (index, option) =>
       if option.parentNode.nodeName is "OPTGROUP"
@@ -51,7 +47,7 @@ class Chosen.Parser
       option_obj =
         $group: group
         $listed: (selected and selected.$listed) or $("<li />", class: classes, html: text[0])
-        $choice: (selected and selected.$choice) or $("<li />", class: classes, html: [$("<a />", link_params), text[1]])
+        $choice: (selected and selected.$choice) or $("<li />", class: classes, html: [$reset_link.clone(), text[1]])
         $option: (selected and selected.$option) or $(option)
         blank: option.value is "" and index is 0
         index: index
@@ -60,6 +56,7 @@ class Chosen.Parser
         value: option.value
         selected: option.selected
         disabled: option.disabled
+        match_type: null
 
       @all_options.push option_obj
       @selected_options.push option_obj if option.selected
@@ -86,34 +83,32 @@ class Chosen.Parser
     @parse(selected_options)
     return @
 
-  add: (data) ->
+  insert: (data) ->
     formatter = @chosen.option_formatter || @default_formatter
     classes = "chosen-option"
+    $option = $("<option />", value: data.value, html: data.label)
+    $reset_link = @build_reset_link()
+    text = formatter($option[0])
 
-    link_params =
-      html: "×"
-      href: "javascript:void(0)"
-      class: "chosen-delete"
-      tabindex: @chosen.$target[0].tabindex || "0"
-
-    option = $("<option />", value: data.value, html: data.label)
-    text = formatter(option[0])
+    @chosen.$target.append($option)
 
     option_obj =
       $group: null
       $listed: $("<li />", class: classes, html: text[0])
-      $choice: $("<li />", class: classes, html: [$("<a />", link_params), text[1]])
-      $option: option
+      $choice: $("<li />", class: classes, html: [$reset_link, text[1]])
+      $option: $option
       blank: false
       index: 0
       score: 0
-      label: option[0].text
-      value: option[0].value
+      label: $option[0].text
+      value: $option[0].value
       selected: false
       disabled: false
+      match_type: 0
 
     @all_options.unshift option_obj
     @available_options.unshift option_obj
+    @selectable_options.unshift option_obj
 
     option_obj
 
@@ -224,6 +219,7 @@ class Chosen.Parser
       )
 
       for option in @all_options
+        option.match_type = null
         words = option.label.split(" ")
 
         for word in words
@@ -262,6 +258,14 @@ class Chosen.Parser
 
   default_formatter: (option) ->
     [option.text, option.text]
+
+  build_reset_link: ->
+    $("<a />",
+      html: "×"
+      href: "javascript:void(0)"
+      class: "chosen-delete"
+      tabindex: @chosen.$target[0].tabindex || "0"
+    )
 
 
   @escape_exp: /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g

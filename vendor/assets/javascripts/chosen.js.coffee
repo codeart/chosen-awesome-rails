@@ -27,9 +27,7 @@ $(window).bind("resize", (evt) ->
     chosen.update_dropdown_position() if chosen.opened
 
   return
-)
-
-$(window).bind("scroll", (evt) ->
+).bind("scroll", (evt) ->
   for chosen in Chosen.pool
     chosen.close() if chosen.opened
 
