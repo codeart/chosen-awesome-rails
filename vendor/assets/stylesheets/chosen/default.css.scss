@@ -244,6 +244,14 @@ $color_active: #fff;
       background-color: $background_color_active;
     }
 
+    li.chosen-option.active.selected {
+      color: $color_selected;
+    }
+
+    li.chosen-option.active.disabled {
+      color: $color_disabled;
+    }
+
     li.chosen-option.disabled.active,
     li.chosen-option.selected.active {
       background-color: $background_color_disabled;
