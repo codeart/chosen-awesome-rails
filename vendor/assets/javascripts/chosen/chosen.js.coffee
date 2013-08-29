@@ -304,8 +304,8 @@ class Chosen
 
       value = "#{suggestion.value} (#{@locale.add_new})"
 
-      suggestion.$listed.contents().last()[0].textContent = value
-      suggestion.$choice.contents().last()[0].textContent = value
+      suggestion.$listed.contents().last()[0].nodeValue = value
+      suggestion.$choice.contents().last()[0].nodeValue = value
     else if @$dropdown.$list.suggestion
       @$dropdown.$list.suggestion = null
 

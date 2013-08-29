@@ -32,7 +32,7 @@ class Chosen.Parser
       if option.parentNode.nodeName is "OPTGROUP"
         if current_group_label != option.parentNode.label
           current_group_label = option.parentNode.label
-          group = $("<li />", class: "chosen-group", html: current_group_label)
+          group = $("<li />", class: "chosen-group", text: current_group_label)
       else
         group = null
 
@@ -41,14 +41,15 @@ class Chosen.Parser
       classes += " selected" if option.selected
       classes += " disabled" if option.disabled
 
+      $option = $(option)
       selected = $.grep(selected_options, (o) => o.value is option.value and o.label is option.label)[0]
-      text = formatter(option)
+      text = formatter($option)
 
       option_obj =
         $group: group
         $listed: (selected and selected.$listed) or $("<li />", class: classes, html: text[0])
         $choice: (selected and selected.$choice) or $("<li />", class: classes, html: [$reset_link.clone(), text[1]])
-        $option: (selected and selected.$option) or $(option)
+        $option: (selected and selected.$option) or $option
         blank: option.value is "" and index is 0
         index: index
         score: index * -1
@@ -86,9 +87,9 @@ class Chosen.Parser
   insert: (data) ->
     formatter = @chosen.option_formatter || @default_formatter
     classes = "chosen-option"
-    $option = $("<option />", value: data.value, html: data.label)
+    $option = $("<option />", value: data.value, text: data.label)
     $reset_link = @build_reset_link()
-    text = formatter($option[0])
+    text = formatter($option)
 
     @chosen.$target.append($option)
 
@@ -152,8 +153,7 @@ class Chosen.Parser
   select: (option) ->
     return @ unless option
 
-    option.$option[0].selected = true
-    option.$option.attr(selected: "selected")
+    option.$option.attr(selected: "selected")[0].selected = true
     option.$listed.addClass("selected")
     option.$choice.addClass("selected")
     option.selected = true
@@ -167,8 +167,7 @@ class Chosen.Parser
   deselect: (option) ->
     return @ unless option
 
-    option.$option[0].selected = false
-    option.$option.removeAttr("selected")
+    option.$option.removeAttr("selected")[0].selected = false
     option.$listed.removeClass("selected")
     option.$choice.removeClass("selected")
     option.selected = false
@@ -253,15 +252,16 @@ class Chosen.Parser
 
   default_parser: (attrs) ->
     value: attrs.value
-    html: attrs.label
+    text: attrs.label
     data: { source: attrs }
 
-  default_formatter: (option) ->
-    [option.text, option.text]
+  default_formatter: ($option) ->
+    value = $option.contents().text()
+    [value, value]
 
   build_reset_link: ->
     $("<a />",
-      html: "×"
+      text: "×"
       href: "javascript:void(0)"
       class: "chosen-delete"
       tabindex: @chosen.$target[0].tabindex || "0"
