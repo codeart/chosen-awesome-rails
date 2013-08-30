@@ -14,7 +14,6 @@ class Chosen
 
     @search_value = ""
     @cursor_option = null
-    @pending_request = null
 
     @build()
     @load()
@@ -368,24 +367,29 @@ class Chosen
   pull_updates: ->
     return @ unless @ajax
 
-    if @pending_request and @pending_request.readyState isnt 4
-      @pending_request.abort()
+    if @ajax.pending_update
+      clearTimeout(@ajax.pending_update)
 
-    data =
-      query: @$container.$search[0].value
+    @ajax.pending_update = setTimeout =>
+      if @ajax.pending_request and @ajax.pending_request.readyState isnt 4
+        @ajax.pending_request.abort()
 
-    @pending_request = $.ajax
-      url: @ajax.url
-      type: @ajax.type or "get"
-      dataType: @ajax.dataType or "json"
-      data: $.extend(@ajax.data || {}, data)
-      async: @ajax.async or true
-      xhrFields: @ajax.xhrFields
+      data =
+        query: @$container.$search[0].value
 
-      beforeSend: (xhr) =>
-        @ajax.beforeSend(xhr) if typeof @ajax.beforeSend is "function"
-      success: (data) =>
-        @redraw_dropdown(data)
+      @ajax.pending_request = $.ajax
+        url: @ajax.url
+        type: @ajax.type or "get"
+        dataType: @ajax.dataType or "json"
+        data: $.extend(@ajax.data || {}, data)
+        async: @ajax.async or true
+        xhrFields: @ajax.xhrFields
+
+        beforeSend: (xhr) =>
+          @ajax.beforeSend(xhr) if typeof @ajax.beforeSend is "function"
+        success: (data) =>
+          @redraw_dropdown(data)
+    , 300
 
     return @
 

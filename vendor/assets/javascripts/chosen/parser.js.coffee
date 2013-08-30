@@ -208,7 +208,8 @@ class Chosen.Parser
         @all_options.length * 6, @all_options.length * 3
       ]
 
-      query = value.replace(Parser.escape_exp, "\\$&").split(" ")
+      exact_query = value.toLowerCase()
+      query = exact_query.replace(Parser.escape_exp, "\\$&").split(" ")
 
       expressions_collection = $.map(query, (word, index) ->
         return [[
@@ -218,14 +219,20 @@ class Chosen.Parser
       )
 
       for option in @all_options
-        option.match_type = null
+        if option.label.toLowerCase() is exact_query
+          option.match_type = 0
+        else
+          option.match_type = null
+
         words = option.label.split(" ")
 
         for word in words
           for expressions in expressions_collection
             for expression, index in expressions
               if word.match(expression)
-                option.match_type = index
+                if option.match_type is null
+                  option.match_type = index + 1
+
                 option.score += scores[index]
                 break
               else if index is expressions.length - 1
