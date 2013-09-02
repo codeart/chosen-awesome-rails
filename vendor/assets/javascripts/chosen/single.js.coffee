@@ -39,6 +39,7 @@ class Chosen.Single extends Chosen
     @$container.$search[0].value = if selected then selected.label else ""
 
     if selected and not selected.blank
+      @search_value = selected.label
       @$container.removeClass("placeholder")
     else
       @$container.addClass("placeholder")
