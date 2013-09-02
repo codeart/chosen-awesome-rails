@@ -78,7 +78,7 @@ class Chosen.Parser
 
     for attrs in data
       parsed = parser(attrs)
-      unless $.grep(selected_options, (o) => o.value is parsed.value.toString() and o.label == parsed.html.toString() ).length
+      unless $.grep(selected_options, (o) => o.value is parsed.value.toString() and o.label == parsed.text.toString() ).length
         @chosen.$target.append($("<option />", parsed))
 
     @parse(selected_options)
