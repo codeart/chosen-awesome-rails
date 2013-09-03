@@ -29,7 +29,7 @@ class Chosen
       @disabled = true
       @enable()
 
-    @$target.hide().after(@$container)
+    @$target.addClass("chosen").hide().after(@$container)
 
   destroy: ->
     @unbind_events()
@@ -38,7 +38,7 @@ class Chosen
 
     @$container.remove()
     @$dropdown.remove()
-    @$target.removeData("chosen").show()
+    @$target.removeData("chosen").removeClass("chosen").show()
 
     delete @$container
     delete @$dropdown
@@ -327,6 +327,7 @@ class Chosen
     @move_selection_to(cursor)
 
     if @cursor_option and @cursor_option.selected and @parser.selectable_options.length
+      # TODO: optimize this
       return @move_selection(dir)
 
     return @
