@@ -15,6 +15,10 @@ $group_color: #a0a0a0;
 $placeholder_color: #989898;
 $color_active: #fff;
 
+.chosen {
+  display: none !important;
+}
+
 .chosen-container {
   position: relative;
   box-sizing: content-box;
