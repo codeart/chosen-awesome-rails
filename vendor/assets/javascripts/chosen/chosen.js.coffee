@@ -53,16 +53,16 @@ class Chosen
     Chosen.pool.splice(index, 1) if index >= 0
 
   build: ->
-    classes = ["chosen-container"]
+    select_classes = ["chosen-container"]
 
-    classes.push if @is_multiple then "multiple" else "single"
-    classes.push "rtl" if @is_rtl
-    classes.push @target.className if @inherit_classes and @target.className
+    select_classes.push if @is_multiple then "multiple" else "single"
+    select_classes.push "rtl" if @is_rtl
+    select_classes.push @target.className if @inherit_classes and @target.className
 
     width = if @width? then @width else "#{@target.offsetWidth}px"
 
     container_props =
-      class: classes.join ' '
+      class: select_classes.join ' '
       style: "width: #{width}; min-width: #{width}; max-width: #{width}"
 
     container_props.title = @target.title if @target.title.length
@@ -75,7 +75,17 @@ class Chosen
     @$container.$search_container = @$container.$choices.find("li.chosen-search-field")
     @$container.$search = @$container.$choices.find("input[type=text]").attr(tabindex: @target.tabindex || "0")
 
-    @$dropdown = $("<div />", class: "chosen-dropdown", unselectable: "on", html: "<ul></ul>")
+    dropdown_classes = ["chosen-dropdown"]
+
+    dropdown_classes.push if @is_multiple then "multiple" else "single"
+    dropdown_classes.push "rtl" if @is_rtl
+
+    dropdown_props =
+      class: dropdown_classes.join ' '
+      unselectable: "on"
+      html: "<ul></ul>"
+
+    @$dropdown = $("<div />", dropdown_props)
     @$dropdown.$list = @$dropdown.find("ul").first()
     @$dropdown.$list.suggestion = null
 
