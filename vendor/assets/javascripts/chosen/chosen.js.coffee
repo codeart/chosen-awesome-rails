@@ -29,7 +29,7 @@ class Chosen
       @disabled = true
       @enable()
 
-    @$target.addClass("chosen").hide().after(@$container)
+    @$target.addClass("chosen").after(@$container)
 
   destroy: ->
     @unbind_events()
