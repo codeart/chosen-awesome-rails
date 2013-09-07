@@ -34,12 +34,18 @@ class Chosen.Single extends Chosen
 
     return
 
+  open: ->
+    return @ if @opened
+
+    @$container.$search[0].value = ""
+
+    super
+
   set_default_value: ->
     selected = @parser.selected()[0]
     @$container.$search[0].value = if selected then selected.label else ""
 
     if selected and not selected.blank
-      @search_value = selected.label
       @$container.removeClass("placeholder")
     else
       @$container.addClass("placeholder")

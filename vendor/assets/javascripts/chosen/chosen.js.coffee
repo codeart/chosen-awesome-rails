@@ -257,7 +257,7 @@ class Chosen
   keyup: (evt) ->
     code = evt.which ? evt.keyCode
 
-    return if [9, 13, 16, 37, 38, 39, 40].indexOf(code) >= 0
+    return if [9, 13, 16, 35, 36, 37, 38, 39, 40].indexOf(code) >= 0
 
     if code is 27 and @opened
       @close()
