@@ -404,7 +404,7 @@ class Chosen
       0
 
   pull_updates: ->
-    return @ unless @ajax
+    return @ if not @ajax or not @$container.$search[0].value
 
     if @ajax.pending_update
       clearTimeout(@ajax.pending_update)
