@@ -60,8 +60,10 @@ class Chosen.Parser
         match_type: null
 
       @all_options.push option_obj
-      @selected_options.push option_obj if option.selected
-      @selectable_options.push option_obj unless option.selected
+
+      unless option_obj.blank
+        @selected_options.push option_obj if option.selected
+        @selectable_options.push option_obj unless option.selected
 
     @order()
     return @

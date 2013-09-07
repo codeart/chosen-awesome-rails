@@ -87,6 +87,7 @@ class Chosen
 
     @$dropdown = $("<div />", dropdown_props)
     @$dropdown.$list = @$dropdown.find("ul").first()
+    @$dropdown.$list.$no_results = $("<li />", class: "chosen-noresults")
     @$dropdown.$list.suggestion = null
 
   bind_events: ->
@@ -213,6 +214,23 @@ class Chosen
 
     return @
 
+  loading: ->
+    @loaded()
+    @$container.addClass("loading")
+    @$dropdown.addClass("loading")
+    return @
+
+  loaded: ->
+    @$container.removeClass("loading error")
+    @$dropdown.removeClass("loading error")
+    return @
+
+  error: ->
+    @loaded()
+    @$container.addClass("error")
+    @$dropdown.addClass("error")
+    return @
+
   dropdown_mouseover: (evt) ->
     option = @parser.find_by_element(evt.target)
 
@@ -295,7 +313,11 @@ class Chosen
 
   update_dropdown_content: ->
     @insert_suggestion()
-    @$dropdown.$list.html(@parser.to_html())
+
+    if @parser.selectable_options.length
+      @$dropdown.$list.html(@parser.to_html())
+    else
+      @show_no_results()
 
     return
 
@@ -317,6 +339,12 @@ class Chosen
       suggestion.$choice.contents().last()[0].nodeValue = value
     else if @$dropdown.$list.suggestion
       @$dropdown.$list.suggestion = null
+
+  show_no_results: ->
+    text = if @ajax then @locale.start_typing else @locale.no_results
+
+    @$dropdown.$list.$no_results.text(text)
+    @$dropdown.$list.html(@$dropdown.$list.$no_results)
 
   apply_filter: ->
     return false unless @filter_has_changed()
@@ -397,9 +425,14 @@ class Chosen
         xhrFields: @ajax.xhrFields
 
         beforeSend: (xhr) =>
+          @loading()
           @ajax.beforeSend(xhr) if typeof @ajax.beforeSend is "function"
         success: (data) =>
+          @loaded()
           @redraw_dropdown(data)
+        error: =>
+          @error()
+
     , 300
 
     return @
@@ -415,8 +448,8 @@ class Chosen
     inherit_classes: true
     is_rtl: false
     locale:
-      no_result: "No results found"
-      start_type: "Please start typing"
+      no_results: "No results found"
+      start_typing: "Please start typing"
       add_new: "add new"
 
   @pool: []

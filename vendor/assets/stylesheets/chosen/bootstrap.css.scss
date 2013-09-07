@@ -62,3 +62,15 @@
   -moz-box-shadow: -3px 2px 6px -2px rgba(82, 168, 236, 0.5), 3px 2px 6px -2px rgba(82, 168, 236, 0.5);
   box-shadow: -3px 2px 6px -2px rgba(82, 168, 236, 0.5), 3px 2px 6px -2px rgba(82, 168, 236, 0.5);
 }
+
+.chosen-container.loading {
+  background-image: -webkit-linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+  background-image: -ms-linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+
+  ul.chosen-choices {
+    background-color: transparent;
+  }
+}

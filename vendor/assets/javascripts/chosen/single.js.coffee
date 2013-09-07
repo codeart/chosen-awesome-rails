@@ -37,7 +37,10 @@ class Chosen.Single extends Chosen
   open: ->
     return @ if @opened
 
-    @$container.$search[0].value = ""
+    selected = @parser.selected()[0]
+
+    if selected and @$container.$search[0].value is selected.label
+      @$container.$search[0].value = ""
 
     super
 

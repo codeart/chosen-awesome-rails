@@ -223,6 +223,11 @@ $color_active: #fff;
       word-wrap: break-word;
     }
 
+    li.chosen-noresults {
+      color: $color_active;
+      background-color: $background_color_active;
+    }
+
     li.chosen-group {
       font-weight: bold;
       color: $group_color;
@@ -263,4 +268,58 @@ $color_active: #fff;
     }
 
   }
+}
+
+.chosen-container.loading {
+  -webkit-background-size: 50px 50px;
+  -moz-background-size: 50px 50px;
+  background-size: 50px 50px;
+  background-image: -webkit-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+  background-image: -ms-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+  -webkit-animation: animate-chosen-stripes 3s linear infinite;
+  -moz-animation: animate-chosen-stripes 3s linear infinite;
+  -ms-animation: animate-chosen-stripes 3s linear infinite;
+  animation: animate-chosen-stripes 3s linear infinite;
+
+  ul.chosen-choices {
+    background-color: transparent;
+  }
+}
+
+.chosen-container.error {
+  -webkit-background-size: 50px 50px;
+  -moz-background-size: 50px 50px;
+  background-size: 50px 50px;
+  background-image: -webkit-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+  background-image: -ms-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+
+  ul.chosen-choices {
+    background-color: transparent;
+  }
+}
+
+@-webkit-keyframes animate-chosen-stripes {
+  0% { background-position: 50px 50px; }
+  100% { background-position: 0 0; }
+}
+
+@-moz-keyframes animate-chosen-stripes {
+  0% { background-position: 50px 50px; }
+  100% { background-position: 0 0; }
+}
+
+@-ms-keyframes animate-chosen-stripes {
+  0% { background-position: 50px 50px; }
+  100% { background-position: 0 0; }
+}
+
+@keyframes animate-chosen-stripes {
+  0% { background-position: 50px 50px; }
+  100% { background-position: 0 0; }
 }
