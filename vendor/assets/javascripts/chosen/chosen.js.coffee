@@ -52,6 +52,9 @@ class Chosen
     index = Chosen.pool.indexOf(@)
     Chosen.pool.splice(index, 1) if index >= 0
 
+  reset: ->
+    @deselect_all()
+
   build: ->
     select_classes = ["chosen-container"]
 
