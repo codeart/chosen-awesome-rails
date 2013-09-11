@@ -208,6 +208,7 @@ class Chosen.Parser
       scores = [
         @all_options.length * 12, @all_options.length * 9
         @all_options.length * 6, @all_options.length * 3
+        @all_options.length
       ]
 
       exact_query = value.toLowerCase()
@@ -235,10 +236,10 @@ class Chosen.Parser
                 if option.match_type is null
                   option.match_type = index + 1
 
-                option.score += scores[index]
+                option.score += scores[option.match_type]
                 break
               else if index is expressions.length - 1
-                option.score += -1
+                option.score -= 1
 
     @order()
     return @

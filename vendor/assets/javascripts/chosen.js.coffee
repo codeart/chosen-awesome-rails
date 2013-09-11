@@ -34,6 +34,6 @@ $(window).bind("resize", (evt) ->
 $(document).ready ->
   $("body").on "click", "input[type=reset]", (evt) ->
     $(evt.target.form).find("select.chosen").each ->
-      $this = $(@)
-      $this.data("chosen") and $this.data("chosen").reset()
+      chosen = $(@).data("chosen")
+      chosen and chosen.reset()
 
