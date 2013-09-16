@@ -189,12 +189,12 @@ class Chosen
   open: ->
     return @ if @opened
 
+    @opened = true
+
     @redraw_dropdown()
 
     @$container.$search.trigger("focus") unless @activated
     @$body.append(@$dropdown)
-
-    @opened = true
 
     @move_selection_to(@parser.index_of(@cursor_option))
 
@@ -246,7 +246,7 @@ class Chosen
   dropdown_mousedown: (evt) ->
     option = @parser.find_by_element(evt.target)
 
-    @select(option) if option
+    @select(option, 1) if option
 
     evt.preventDefault()
     evt.stopImmediatePropagation()
@@ -258,7 +258,7 @@ class Chosen
     switch code
       when 13
         if @opened
-          @select(@cursor_option)
+          @select(@cursor_option, 2)
           @move_selection(1) if @is_multiple
         else
           @open()
@@ -283,10 +283,10 @@ class Chosen
     if code is 27 and @opened
       @close()
       evt.stopPropagation()
-    else if @filter_has_changed()
-      if @ajax then @pull_updates() else @redraw_dropdown()
-
+    else if @has_filter_changed()
       @open()
+
+      if @ajax then @pull_updates() else @redraw_dropdown()
 
     return
 
@@ -302,6 +302,8 @@ class Chosen
     return
 
   update_dropdown_position: ->
+    return unless @opened
+
     list = @$container.find("ul")
     offsets = list.offset()
     height = list.innerHeight()
@@ -350,14 +352,14 @@ class Chosen
     @$dropdown.$list.html(@$dropdown.$list.$no_results)
 
   apply_filter: ->
-    return false unless @filter_has_changed()
+    return false unless @has_filter_changed()
 
     @search_value = @$container.$search[0].value
     @parser.apply_filter(@$container.$search[0].value)
 
     true
 
-  filter_has_changed: ->
+  has_filter_changed: ->
     @search_value isnt @$container.$search[0].value
 
   move_selection: (dir) ->

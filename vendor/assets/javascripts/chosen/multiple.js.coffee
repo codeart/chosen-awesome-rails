@@ -29,14 +29,24 @@ class Chosen.Multiple extends Chosen
 
     switch code
       when 8
-        @set_pending_option()
+        @set_pending_option(true) if @pending_option
       else
         super
 
     return
 
-  set_pending_option: ->
-    if @pending_option
+  keyup: (evt) ->
+    code = evt.which ? evt.keyCode
+
+    if code is 8
+      @set_pending_option(false)
+    else
+      @reset_pending_option()
+
+    super
+
+  set_pending_option: (do_deselect) ->
+    if @pending_option and do_deselect
       @deselect(@pending_option)
       @reset_pending_option()
 
@@ -83,20 +93,26 @@ class Chosen.Multiple extends Chosen
     @parser.deselect(option)
 
     option.$choice.remove()
-
-    @update_dropdown_position() if @opened
+    @update_dropdown_position()
 
     @$target.trigger("change")
     return @
 
-  select: (option) ->
+  select: (option, evt_type) ->
     return @ if not option or option.disabled or option.selected
 
     @parser.select(option)
     @$container.$search_container.before(option.$choice)
 
     @bind_option_events(option)
-    @update_dropdown_position() if @opened
+
+    switch evt_type
+      when 1
+        @close()
+      when 2
+        @update_dropdown_position()
+      else
+        null
 
     @$target.trigger("change")
     return @
