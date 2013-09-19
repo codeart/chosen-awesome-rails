@@ -98,21 +98,16 @@ class Chosen.Multiple extends Chosen
     @$target.trigger("change")
     return @
 
-  select: (option, evt_type) ->
+  select: (option) ->
     return @ if not option or option.disabled or option.selected
 
     @parser.select(option)
     @$container.$search_container.before(option.$choice)
 
-    @bind_option_events(option)
+    @$container.$search[0].value = ""
 
-    switch evt_type
-      when 1
-        @close()
-      when 2
-        @update_dropdown_position()
-      else
-        null
+    @bind_option_events(option)
+    @close()
 
     @$target.trigger("change")
     return @

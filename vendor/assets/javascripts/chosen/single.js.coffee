@@ -64,7 +64,7 @@ class Chosen.Single extends Chosen
     @$target.trigger("change")
     return @
 
-  select: (option, evt_type) ->
+  select: (option) ->
     return @ if not option or option.disabled or option.selected
 
     @parser.deselect(@parser.selected()[0])

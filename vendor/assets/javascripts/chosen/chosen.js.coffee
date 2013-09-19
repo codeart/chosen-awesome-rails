@@ -246,7 +246,7 @@ class Chosen
   dropdown_mousedown: (evt) ->
     option = @parser.find_by_element(evt.target)
 
-    @select(option, 1) if option
+    @select(option) if option
 
     evt.preventDefault()
     evt.stopImmediatePropagation()
@@ -258,7 +258,7 @@ class Chosen
     switch code
       when 13
         if @opened
-          @select(@cursor_option, 2)
+          @select(@cursor_option)
           @move_selection(1) if @is_multiple
         else
           @open()
