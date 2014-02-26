@@ -47,6 +47,7 @@ class Chosen.Single extends Chosen
   set_default_value: ->
     selected = @parser.selected()[0]
     @$container.$search[0].value = if selected then selected.label else ""
+    @$container.$search[0].defaultValue = @$container.$search[0].value
 
     if selected and not selected.blank
       @$container.removeClass("placeholder")

@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# stub: chosen-awesome-rails 0.0.1 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chosen-awesome-rails"
@@ -12,7 +13,7 @@ Gem::Specification.new do |s|
   s.files = [".gitignore", "Gemfile", "Gemfile.lock", "LICENSE.txt", "README.md", "Rakefile", "chosen-awesome-rails.gemspec", "lib/chosen-awesome-rails.rb", "lib/chosen-awesome-rails/engine.rb", "lib/chosen-awesome-rails/engine3.rb", "lib/chosen-awesome-rails/version.rb", "vendor/assets/images/chosen-arrow.gif", "vendor/assets/javascripts/chosen.js.coffee", "vendor/assets/javascripts/chosen/chosen.js.coffee", "vendor/assets/javascripts/chosen/multiple.js.coffee", "vendor/assets/javascripts/chosen/parser.js.coffee", "vendor/assets/javascripts/chosen/single.js.coffee", "vendor/assets/stylesheets/chosen.css.scss", "vendor/assets/stylesheets/chosen/bootstrap.css.scss", "vendor/assets/stylesheets/chosen/default.css.scss"]
   s.homepage = "https://github.com/heaven/chosen-awesome-rails"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.25"
+  s.rubygems_version = "2.1.3"
   s.summary = "Integrate Chosen javascript library with Rails asset pipeline"
 
   if s.respond_to? :specification_version then

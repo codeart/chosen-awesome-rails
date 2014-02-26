@@ -6,6 +6,7 @@ class Chosen
 
     @$body = $("body")
     @target = @$target[0]
+    @default_values = @$target.val()
     @parser = new Chosen.Parser(@)
 
     @allow_deselect = @is_multiple or (@parser.includes_blank() and @allow_deselect != false)
@@ -54,6 +55,9 @@ class Chosen
 
   reset: ->
     @deselect_all()
+    @$target.val(@default_values)
+    @parser.parse()
+    @load()
 
   build: ->
     select_classes = ["chosen-container"]
@@ -154,7 +158,7 @@ class Chosen
       @blur()
       @unbind_events()
 
-      @$container.find("a").each( ->
+      @$container.find("a").each(->
         $link = $(@)
 
         @tabindex = $link.attr("tabindex")
