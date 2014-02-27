@@ -6,8 +6,8 @@ class Chosen
 
     @$body = $("body")
     @target = @$target[0]
-    @default_values = @$target.val()
     @parser = new Chosen.Parser(@)
+    @default_values = $.map @parser.selected_options, (option) -> option
 
     @allow_deselect = @is_multiple or (@parser.includes_blank() and @allow_deselect != false)
     @activated = false
@@ -55,8 +55,10 @@ class Chosen
 
   reset: ->
     @deselect_all()
-    @$target.val(@default_values)
-    @parser.parse()
+
+    $.each @default_values, (index, option) =>
+      @parser.restore(option)
+
     @load()
 
   build: ->

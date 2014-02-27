@@ -115,6 +115,18 @@ class Chosen.Parser
 
     option_obj
 
+  restore: (option) ->
+    @select(option)
+
+    unless $.grep(@all_options, (o) => option.label is o.label).length
+      @chosen.$target.append(option.$option)
+
+      @all_options.unshift option
+      @available_options.unshift option
+      @selectable_options.unshift option
+
+    @parse()
+
   remove: (option) ->
     return if option.selected
 
