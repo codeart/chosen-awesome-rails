@@ -167,7 +167,7 @@ class Chosen.Parser
   select: (option) ->
     return @ unless option
 
-    option.$option.attr(selected: "selected")[0].selected = true
+    option.$option.prop(selected: true)
     option.$listed.addClass("selected")
     option.$choice.addClass("selected")
     option.selected = true
@@ -181,7 +181,7 @@ class Chosen.Parser
   deselect: (option) ->
     return @ unless option
 
-    option.$option.removeAttr("selected")[0].selected = false
+    option.$option.prop(selected: false)
     option.$listed.removeClass("selected")
     option.$choice.removeClass("selected")
     option.selected = false
