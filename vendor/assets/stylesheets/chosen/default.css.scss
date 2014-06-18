@@ -42,10 +42,9 @@ $color_active: #fff;
   }
 
   a.chosen-delete {
-    padding: 2px 3px 2px 4px;
-    line-height: 1;
+    padding: 0 5px;
+    margin: 0;
     color: #777;
-    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
@@ -129,7 +128,6 @@ $color_active: #fff;
     li.chosen-option {
       padding: 0 5px 0 0;
       margin: 3px 0 0 3px;
-      line-height: 1.5;
       border: 1px solid #aaa;
       border-radius: 3px;
       background-color: #e4e4e4;
