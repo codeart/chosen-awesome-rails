@@ -64,7 +64,7 @@ You can also override text messages with:
   locale: {
     no_results: "No results found",
     start_typing: "Please start typing",
-    add_new: "add new
+    add_new: "add new"
   }
 }
 ```
