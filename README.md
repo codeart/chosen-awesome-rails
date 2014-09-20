@@ -1,5 +1,4 @@
 # Chosen awesome (with ajax support and dynamic options injection)
-====================
 
 A written from the scratch library that wraps around default html select controls
 and makes them more user friendly (Ruby on Rails package).
