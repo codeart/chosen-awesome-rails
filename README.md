@@ -52,6 +52,11 @@ Default options are:
 }
 ```
 
+Dynamic insertion example:
+
+![Dynamic insertion example]
+(http://oi62.tinypic.com/14kb808.jpg)
+
 The option formatter allows to build selects like this one:
 
 ![Custom dropdown options]
