@@ -376,7 +376,7 @@ class Chosen
     @move_selection_to(cursor)
 
     if @cursor_option and @cursor_option.selected and @parser.selectable_options.length
-      # TODO: optimize this
+      # TODO: optimize this, could be slow on big lists
       return @move_selection(dir)
 
     return @

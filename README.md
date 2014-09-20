@@ -1,4 +1,4 @@
-# Chosen awesome (with ajax support and dynamic options injection)
+# Chosen awesome (with ajax support and "on the fly" options insertion)
 
 A written from scratch library that wraps around default html select controls
 and makes them more user friendly (Ruby on Rails package). Out of the box ajax support.
@@ -38,20 +38,22 @@ Default options are:
 
 ```javascript
 {
-  allow_insertion: false, // allows to add missing options dynamically, e.g. when you
-                          // need to show a list of tags allowing users to add missing ones
-  inherit_classes: true,  // whether chosen should inherit html class names from the
-                          // original select element
-  option_parser: null,    // a function that should return an object that
-                          // will be passed right to jQuery's append method to build
-                          // html option elemets: $("<option />", parsed_object)
-  option_formatter: null  // a function that accepts an option object (jquery selector)
+  allow_insertion: false, // Allows to add missing options dynamically, e.g. when you
+                          // need to show a list of tags allowing users to add missing ones.
+  inherit_classes: true,  // Whether chosen should inherit html class names from the
+                          // original select element or not.
+  option_parser: null,    // A function that should return an object that
+                          // will be passed to jQuery to build html option elemets:
+                          // $("<option />", parsed_object).
+  option_formatter: null  // A function that accepts an option object (jquery selector)
                           // and returns an array of 2 values where one is used
                           // for the dropdown item and another for the choice element
+  placeholder: "..."      // Custom placeholder text (by default it will try to read it
+                          // from the target element)
 }
 ```
 
-Dynamic insertion example:
+On the fly options insertion:
 
 ![Dynamic insertion example]
 (http://oi62.tinypic.com/14kb808.jpg)
@@ -87,3 +89,9 @@ And pass the next ajax options:
   }
 }
 ```
+
+### JS events
+
+Once chosen is ready it triggers `chosen:ready` event on the target element.
+A link to the newly created Chosen object will be saved in the data-chosen attribute
+of the target select element.
