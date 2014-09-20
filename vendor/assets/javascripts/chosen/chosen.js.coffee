@@ -458,6 +458,8 @@ class Chosen
     allow_insertion: false
     inherit_classes: true
     is_rtl: false
+    option_parser: null
+    option_formatter: null
     locale:
       no_results: "No results found"
       start_typing: "Please start typing"
