@@ -206,6 +206,7 @@ class Chosen
 
     @$dropdown.bind "mouseover", "li.chosen-option", (evt) => @dropdown_mouseover(evt)
     @$dropdown.bind "mousedown", "li.chosen-option", (evt) => @dropdown_mousedown(evt)
+    @$dropdown.bind "mousewheel DOMMouseScroll", (evt) => @prevent_page_scroll(evt)
 
     @$container.addClass("opened")
     @$dropdown.addClass("opened")
@@ -217,7 +218,7 @@ class Chosen
 
     @$container.removeClass("opened")
     @$dropdown.removeClass("opened")
-    @$dropdown.unbind "mouseover mousedown"
+    @$dropdown.unbind "mouseover mousedown mousewheel DOMMouseScroll"
     @$dropdown.remove()
     @opened = false
 
@@ -256,6 +257,14 @@ class Chosen
 
     evt.preventDefault()
     evt.stopImmediatePropagation()
+    return
+
+  prevent_page_scroll: (evt) ->
+    delta = evt.originalEvent.wheelDelta || -evt.originalEvent.detail
+
+    if (delta < 0 and @$dropdown.$list[0].scrollHeight - @$dropdown.scrollTop() == @$dropdown.innerHeight()) or (delta > 0 and @$dropdown.scrollTop() == 0)
+      evt.preventDefault()
+
     return
 
   keydown: (evt) ->
