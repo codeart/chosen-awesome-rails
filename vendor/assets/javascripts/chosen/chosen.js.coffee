@@ -18,21 +18,16 @@ class Chosen
 
     @build()
     @load()
-    @complete()
 
-  complete: ->
     Chosen.pool.push(@)
 
-    if @target.disabled
-      @disabled = false
-      @disable()
-    else
-      @disabled = true
-      @enable()
+    @set_state()
 
-    @$target.addClass("chosen").after(@$container)
+    @$target.addClass("chosen").after(@$container).bind("chosen:update", (evt) => @set_state())
 
   destroy: ->
+    @$target.unbind "chosen:update"
+
     @unbind_events()
 
     delete @$body
@@ -52,6 +47,14 @@ class Chosen
 
     index = Chosen.pool.indexOf(@)
     Chosen.pool.splice(index, 1) if index >= 0
+
+  set_state: ->
+    if @target.disabled
+      @disabled = false
+      @disable()
+    else
+      @disabled = true
+      @enable()
 
   reset: ->
     @deselect_all()
