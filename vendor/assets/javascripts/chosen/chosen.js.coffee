@@ -71,11 +71,14 @@ class Chosen
     select_classes.push "rtl" if @is_rtl
     select_classes.push @target.className if @inherit_classes and @target.className
 
-    width = if @width? then @width else "#{@target.offsetWidth}px"
-
     container_props =
       class: select_classes.join ' '
-      style: "width: #{width}; min-width: #{width}; max-width: #{width}"
+      css: if @width? then { width: @width } else @getCSSProperties(@target, ["width", "min-width", "max-width"])
+
+    attrs = @getCSSProperties(@target, ["height"])
+
+    if attrs.height
+      container_props.css['min-height'] = attrs.height
 
     container_props.title = @target.title if @target.title.length
     container_props.id = @target.id.replace(/[^\w]/g, '-') + "-chosen" if @target.id
@@ -101,6 +104,28 @@ class Chosen
     @$dropdown.$list = @$dropdown.find("ul").first()
     @$dropdown.$list.$no_results = $("<li />", class: "chosen-noresults")
     @$dropdown.$list.suggestion = null
+
+  getCSSProperties: (node, properties)->
+    sheets = document.styleSheets
+    node.matches = node.matches or node.webkitMatchesSelector or node.mozMatchesSelector or node.msMatchesSelector or node.oMatchesSelector
+    matches = []
+    attrs = {}
+
+    for i of sheets
+      rules = sheets[i].rules or sheets[i].cssRules
+
+      for r of rules
+        if node.matches(rules[r].selectorText)
+          matches.push rules[r].cssText
+
+    for p in properties
+      for m in matches
+        match = m.match(new RegExp("(?:\\s|;|^)#{p}:\\s*([^;]+)"))
+
+        if match
+          attrs[p] = match[1]
+
+    attrs
 
   bind_events: ->
     if @target.id.length
@@ -322,10 +347,9 @@ class Chosen
   update_dropdown_position: ->
     return unless @opened
 
-    list = @$container.find("ul")
-    offsets = list.offset()
-    height = list.innerHeight()
-    width = list.innerWidth()
+    offsets = @$container.offset()
+    height = @$container.innerHeight()
+    width = @$container.innerWidth()
 
     @$dropdown.css
       left: "#{offsets.left}px",

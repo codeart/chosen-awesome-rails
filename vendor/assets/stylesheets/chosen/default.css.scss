@@ -8,7 +8,6 @@ $background_color_default: #fff;
 $background_color_active: rgba(82, 168, 236, 1);
 $background_color_disabled: #efefef;
 
-$color_default: #555;
 $color_disabled: #989898;
 $color_selected: #989898;
 $group_color: #a0a0a0;
@@ -25,21 +24,14 @@ $color_active: #fff;
   display: inline-block;
   *display: inline;
   vertical-align: middle;
+  height: auto !important;
   outline: none;
   cursor: default;
-  border: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: $border_color_default;
+  background-color: $background_color_default;
   zoom: 1;
-
-  > a.chosen-delete {
-    position: absolute;
-    right: 12px;
-    top: 4px;
-  }
-
-  a.chosen-delete:hover {
-    color: #333;
-    text-decoration: none;
-  }
 
   a.chosen-delete {
     padding: 0 5px;
@@ -50,6 +42,24 @@ $color_active: #fff;
     text-decoration: none;
   }
 
+  a.chosen-delete:hover {
+    color: #333;
+    text-decoration: none;
+  }
+
+  > a.chosen-delete {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 10px;
+    height: 15px;
+    padding: 0;
+    margin: -8px auto 0 auto;
+    text-align: center;
+    font-size: 15px;
+    line-height: 1;
+  }
+
   ul.chosen-choices {
     position: relative;
     overflow: hidden;
@@ -58,14 +68,10 @@ $color_active: #fff;
     padding: 0 24px 0 0;
     margin: 0;
     width: auto;
-    height: auto;
-    border-width: 1px;
-    border-style: solid;
-    border-color: $border_color_default;
+    height: 100%;
     background-repeat: no-repeat;
     background-position: right center;
     background-image: url($arrow_image_path);
-    background-color: $background_color_default;
 
     li {
       position: relative;
@@ -77,13 +83,13 @@ $color_active: #fff;
 
     li.chosen-search-field {
       width: 100%;
+      height: 100%;
 
       input {
         position: relative;
         float: left;
         width: 100%;
         margin: 0;
-        color: $color_default;
         outline: none;
         cursor: text;
         border: none;
@@ -127,7 +133,7 @@ $color_active: #fff;
   ul.chosen-choices {
     li.chosen-option {
       padding: 0 5px 0 0;
-      margin: 3px 0 0 3px;
+      margin: 0 3px 3px 0;
       border: 1px solid #aaa;
       border-radius: 3px;
       background-color: #e4e4e4;
@@ -201,7 +207,7 @@ $color_active: #fff;
   border: 1px solid $border_color_active;
   border-top: none;
   background: $background_color_default;
-  z-index: 100;
+  z-index: 10000;
   zoom: 1;
 
   ul {
