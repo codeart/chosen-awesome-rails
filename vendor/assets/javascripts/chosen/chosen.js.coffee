@@ -106,10 +106,12 @@ class Chosen
     @$dropdown.$list.suggestion = null
 
   getCSSProperties: (node, properties)->
+    attrs = {}
+    return attrs if Chosen.is_crappy_browser(8)
+
     sheets = document.styleSheets
     node.matches = node.matches or node.webkitMatchesSelector or node.mozMatchesSelector or node.msMatchesSelector or node.oMatchesSelector
     matches = []
-    attrs = {}
 
     for i of sheets
       rules = sheets[i].rules or sheets[i].cssRules
