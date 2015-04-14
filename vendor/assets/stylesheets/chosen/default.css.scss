@@ -20,7 +20,6 @@ $color_active: #fff;
 
 .chosen-container {
   position: relative;
-  box-sizing: content-box;
   display: inline-block;
   *display: inline;
   vertical-align: middle;
@@ -64,7 +63,6 @@ $color_active: #fff;
     position: relative;
     overflow: hidden;
     display: block;
-    box-sizing: content-box;
     padding: 0 24px 0 0;
     margin: 0;
     width: auto;
@@ -203,7 +201,6 @@ $color_active: #fff;
   overflow-x: hidden;
   overflow-y: auto;
   cursor: default;
-  box-sizing: content-box;
   border: 1px solid $border_color_active;
   border-top: none;
   background: $background_color_default;
