@@ -349,20 +349,13 @@ class Chosen
   update_dropdown_position: ->
     return unless @opened
 
-    offsets = @$container.offset()
     rect = @$container[0].getBoundingClientRect()
     border_width = parseInt(@$container.css("border-bottom-width"))
-
-    if rect.width
-      width = rect.width
-      height = rect.height
-    else
-      width = rect.right - rect.left
-      height = rect.bottom - rect.top
+    width = if rect.width then rect.width else rect.right - rect.left
 
     @$dropdown.css
-      left: "#{offsets.left}px",
-      top: "#{offsets.top + height - border_width}px"
+      left: "#{rect.left}px",
+      top: "#{rect.bottom - border_width}px"
       width: "#{width}px"
 
     return
