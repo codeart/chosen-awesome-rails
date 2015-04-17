@@ -114,7 +114,10 @@ class Chosen
     matches = []
 
     for i of sheets
-      rules = sheets[i].rules or sheets[i].cssRules
+      try
+        rules = sheets[i].rules or sheets[i].cssRules
+      catch
+        continue
 
       for r of rules
         if node.matches(rules[r].selectorText)
