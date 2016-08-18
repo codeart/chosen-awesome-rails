@@ -23,7 +23,7 @@ class Chosen
 
     @set_state()
 
-    @$target.addClass("chosen").after(@$container).bind("chosen:update", (evt) => @set_state())
+    @$target.after(@$container).bind("chosen:update", (evt) => @set_state())
 
   destroy: ->
     @$target.unbind "chosen:update"
@@ -73,7 +73,9 @@ class Chosen
 
     container_props =
       class: select_classes.join ' '
-      css: if @width? then { width: @width } else @getCSSProperties(@target, ["width", "min-width", "max-width"])
+      css: if @width then { width: @width } else @getCSSProperties(@target, ["width", "min-width", "max-width"])
+
+    @$target.addClass("chosen")
 
     attrs = @getCSSProperties(@target, ["height"])
 
@@ -120,8 +122,11 @@ class Chosen
         continue
 
       for r of rules
-        if node.matches(rules[r].selectorText)
-          matches.push rules[r].cssText
+        try
+          if node.matches(rules[r].selectorText)
+            matches.push rules[r].cssText
+        catch
+          continue
 
     for p in properties
       for m in matches
@@ -422,7 +427,7 @@ class Chosen
     @move_selection_to(cursor)
 
     if @cursor_option and @cursor_option.selected and @parser.selectable_options.length
-      # TODO: optimize this, could be slow on big lists
+      # TODO: optimize this, could be slow on large lists
       return @move_selection(dir)
 
     return @

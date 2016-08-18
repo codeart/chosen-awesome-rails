@@ -1,33 +1,37 @@
-$arrow_image_path: image_path('chosen-arrow.gif');
+$arrow_image_path: image_path('chosen-arrow.gif') !default;
 
-$border_color_default: #ccc;
-$border_color_active: rgba(82, 168, 236, 1);
-$border_color_disabled: #ccc;
+$border_width:          1px;
+$border_style:          solid;
+$border_color_default:  #ccc !default;
+$border_color_active:   rgba(82, 168, 236, 1) !default;
+$border_color_disabled: #ccc !default;
 
-$background_color_default: #fff;
-$background_color_active: rgba(82, 168, 236, 1);
-$background_color_disabled: #efefef;
+$background_color_default:  #fff !default;
+$background_color_active:   rgba(82, 168, 236, 1) !default;
+$background_color_disabled: #efefef !default;
 
-$color_disabled: #989898;
-$color_selected: #989898;
-$group_color: #a0a0a0;
-$placeholder_color: #989898;
-$color_active: #fff;
+$color_active:   #fff !default;
+$color_disabled: #989898 !default;
+$color_selected: #989898 !default;
+
+$group_color:       #a0a0a0 !default;
+$placeholder_color: #989898 !default;
+
+$icon_delete_color:       #777 !default;
+$icon_delete_color_hover: #333 !default;
 
 .chosen {
   display: none !important;
 }
 
 .chosen-container {
-  position: relative;
-  display: inline-block;
-  *display: inline;
-  vertical-align: middle;
+  display: flex !important;
+  align-items: center !important;
   height: auto !important;
   outline: none;
   cursor: default;
-  border-width: 1px;
-  border-style: solid;
+  border-width: $border_width;
+  border-style: $border_style;
   border-color: $border_color_default;
   background-color: $background_color_default;
   zoom: 1;
@@ -35,14 +39,14 @@ $color_active: #fff;
   a.chosen-delete {
     padding: 0 5px;
     margin: 0;
-    color: #777;
+    color: $icon_delete_color;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
   }
 
   a.chosen-delete:hover {
-    color: #333;
+    color: $icon_delete_color_hover;
     text-decoration: none;
   }
 
@@ -65,8 +69,7 @@ $color_active: #fff;
     display: block;
     padding: 0 24px 0 0;
     margin: 0;
-    width: auto;
-    height: 100%;
+    width: 100%;
     background-repeat: no-repeat;
     background-position: right center;
     background-image: url($arrow_image_path);
@@ -76,12 +79,11 @@ $color_active: #fff;
       display: block;
       float: left;
       list-style: none;
-      white-space: nowrap;
+      word-wrap: break-word;
     }
 
     li.chosen-search-field {
       width: 100%;
-      height: 100%;
 
       input {
         position: relative;
@@ -130,7 +132,7 @@ $color_active: #fff;
 .chosen-container.multiple {
   ul.chosen-choices {
     li.chosen-option {
-      padding: 0 5px 0 0;
+      padding: 0 3px;
       margin: 0 3px 3px 0;
       border: 1px solid #aaa;
       border-radius: 3px;
@@ -181,7 +183,7 @@ $color_active: #fff;
   }
 
   a:hover {
-    background-position: 0 0px;
+    background-position: 0 0;
   }
 }
 
@@ -201,7 +203,9 @@ $color_active: #fff;
   overflow-x: hidden;
   overflow-y: auto;
   cursor: default;
-  border: 1px solid $border_color_active;
+  border-width: $border_width;
+  border-style: $border_style;
+  border-color: $border_color_active;
   border-top: none;
   background: $background_color_default;
   z-index: 10000;
@@ -280,10 +284,10 @@ $color_active: #fff;
   background-image: -ms-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
   background-image: -o-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
   background-image: linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
-  -webkit-animation: animate-chosen-stripes 3s linear infinite;
-  -moz-animation: animate-chosen-stripes 3s linear infinite;
-  -ms-animation: animate-chosen-stripes 3s linear infinite;
-  animation: animate-chosen-stripes 3s linear infinite;
+  -webkit-animation: chosen-animate-stripes 3s linear infinite;
+  -moz-animation: chosen-animate-stripes 3s linear infinite;
+  -ms-animation: chosen-animate-stripes 3s linear infinite;
+  animation: chosen-animate-stripes 3s linear infinite;
 
   ul.chosen-choices {
     background-color: transparent;
@@ -305,22 +309,22 @@ $color_active: #fff;
   }
 }
 
-@-webkit-keyframes animate-chosen-stripes {
+@-webkit-keyframes chosen-animate-stripes {
   0% { background-position: 50px 50px; }
   100% { background-position: 0 0; }
 }
 
-@-moz-keyframes animate-chosen-stripes {
+@-moz-keyframes chosen-animate-stripes {
   0% { background-position: 50px 50px; }
   100% { background-position: 0 0; }
 }
 
-@-ms-keyframes animate-chosen-stripes {
+@-ms-keyframes chosen-animate-stripes {
   0% { background-position: 50px 50px; }
   100% { background-position: 0 0; }
 }
 
-@keyframes animate-chosen-stripes {
+@keyframes chosen-animate-stripes {
   0% { background-position: 50px 50px; }
   100% { background-position: 0 0; }
 }

@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.email = ["alex@codeart.pw"]
   s.files = [".gitignore", "Gemfile", "Gemfile.lock", "LICENSE.txt", "README.md", "Rakefile", "chosen-awesome-rails.gemspec", "lib/chosen-awesome-rails.rb", "lib/chosen-awesome-rails/engine.rb", "lib/chosen-awesome-rails/engine3.rb", "lib/chosen-awesome-rails/version.rb", "vendor/assets/images/chosen-arrow.gif", "vendor/assets/javascripts/chosen.js.coffee", "vendor/assets/javascripts/chosen/chosen.js.coffee", "vendor/assets/javascripts/chosen/multiple.js.coffee", "vendor/assets/javascripts/chosen/parser.js.coffee", "vendor/assets/javascripts/chosen/single.js.coffee", "vendor/assets/stylesheets/chosen.css.scss", "vendor/assets/stylesheets/chosen/bootstrap.css.scss", "vendor/assets/stylesheets/chosen/bootstrap2.css.scss", "vendor/assets/stylesheets/chosen/default.css.scss"]
   s.homepage = "https://github.com/heaven/chosen-awesome-rails"
-  s.rubygems_version = "2.4.5"
+  s.rubygems_version = "2.5.1"
   s.summary = "Integrate Chosen javascript library with Rails asset pipeline"
 
   if s.respond_to? :specification_version then
