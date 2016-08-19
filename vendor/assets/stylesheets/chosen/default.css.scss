@@ -25,6 +25,7 @@ $icon_delete_color_hover: #333 !default;
 }
 
 .chosen-container {
+  position: relative;
   display: flex !important;
   align-items: center !important;
   height: auto !important;
