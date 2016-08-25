@@ -66,7 +66,6 @@ $icon_delete_color_hover: #333 !default;
 
   ul.chosen-choices {
     position: relative;
-    overflow: hidden;
     display: block;
     padding: 0 24px 0 0;
     margin: 0;
@@ -126,91 +125,129 @@ $icon_delete_color_hover: #333 !default;
       }
     }
   }
-}
 
-.chosen-container.single { }
+  &.single { }
 
-.chosen-container.multiple {
-  ul.chosen-choices {
-    li.chosen-option {
-      padding: 0 3px;
-      margin: 0 3px 3px 0;
-      border: 1px solid #aaa;
-      border-radius: 3px;
-      background-color: #e4e4e4;
-      background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
-      background-image: -webkit-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-      background-image: -moz-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-      background-image: -o-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-      background-image: linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-      background-clip: padding-box;
-      box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-      color: #333;
+  &.multiple {
+    ul.chosen-choices {
+      li.chosen-option {
+        padding: 0 3px;
+        margin: 0 3px 3px 0;
+        border: 1px solid #aaa;
+        border-radius: 3px;
+        background-color: #e4e4e4;
+        background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
+        background-image: -webkit-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+        background-image: -moz-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+        background-image: -o-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+        background-image: linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+        background-clip: padding-box;
+        box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+        color: #333;
 
-      > a.chosen-delete {
-        position: relative;
-        float: left;
+        > a.chosen-delete {
+          position: relative;
+          float: left;
+        }
+      }
+
+      li.chosen-option.active {
+        background-color: #d0d0d0;
+        background-image: none;
       }
     }
+  }
 
-    li.chosen-option.active {
-      background-color: #d0d0d0;
-      background-image: none;
+  &.focus {
+    ul.chosen-choices {
+      border-color: $border_color_active;
     }
   }
-}
 
-.chosen-container.focus {
-  ul.chosen-choices {
-    border-color: $border_color_active;
-  }
-}
+  &.opened { }
 
-.chosen-container.opened { }
+  &.disabled {
+    ul {
+      border-color: $border_color_disabled;
+      background-color: $background_color_disabled;
+    }
 
-.chosen-container.disabled {
-  ul {
-    border-color: $border_color_disabled;
-    background-color: $background_color_disabled;
-  }
+    * {
+      color: $color_disabled !important;
+      cursor: default !important;
+    }
 
-  * {
-    color: $color_disabled !important;
-    cursor: default !important;
-  }
+    > li, a {
+      opacity: 0.6;
+    }
 
-  > li, a {
-    opacity: 0.6;
+    a:hover {
+      background-position: 0 0;
+    }
   }
 
-  a:hover {
-    background-position: 0 0;
+  &.placeholder {
+    > a.chosen-delete {
+      display: none;
+    }
   }
-}
 
-.chosen-container.placeholder {
-  > a.chosen-delete {
-    display: none;
+  &.rtl { }
+
+  &.loading {
+    -webkit-background-size: 50px 50px;
+    -moz-background-size: 50px 50px;
+    background-size: 50px 50px;
+    background-image: -webkit-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+    background-image: -ms-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
+    -webkit-animation: chosen-animate-stripes 3s linear infinite;
+    -moz-animation: chosen-animate-stripes 3s linear infinite;
+    -ms-animation: chosen-animate-stripes 3s linear infinite;
+    animation: chosen-animate-stripes 3s linear infinite;
+
+    ul.chosen-choices {
+      background-color: transparent;
+    }
   }
-}
 
-.chosen-container.rtl {
+  &.error {
+    -webkit-background-size: 50px 50px;
+    -moz-background-size: 50px 50px;
+    background-size: 50px 50px;
+    background-image: -webkit-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+    background-image: -ms-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
+
+    ul.chosen-choices {
+      background-color: transparent;
+    }
+  }
 }
 
 .chosen-dropdown {
   position: absolute;
-  height: auto;
-  max-height: 250px;
   overflow-x: hidden;
   overflow-y: auto;
   cursor: default;
   border-width: $border_width;
   border-style: $border_style;
   border-color: $border_color_active;
-  border-top: none;
   background: $background_color_default;
   z-index: 10000;
   zoom: 1;
+
+  &.downside {
+    border-top: none;
+  }
+
+  &.upside {
+    border-bottom: none;
+  }
 
   ul {
     position: relative;
@@ -273,40 +310,6 @@ $icon_delete_color_hover: #333 !default;
       background-color: $background_color_disabled;
     }
 
-  }
-}
-
-.chosen-container.loading {
-  -webkit-background-size: 50px 50px;
-  -moz-background-size: 50px 50px;
-  background-size: 50px 50px;
-  background-image: -webkit-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
-  background-image: -ms-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
-  background-image: -o-linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(-45deg, rgba(255, 154, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 154, 26, .10) 50%, rgba(255, 154, 26, .10) 75%, transparent 75%, transparent);
-  -webkit-animation: chosen-animate-stripes 3s linear infinite;
-  -moz-animation: chosen-animate-stripes 3s linear infinite;
-  -ms-animation: chosen-animate-stripes 3s linear infinite;
-  animation: chosen-animate-stripes 3s linear infinite;
-
-  ul.chosen-choices {
-    background-color: transparent;
-  }
-}
-
-.chosen-container.error {
-  -webkit-background-size: 50px 50px;
-  -moz-background-size: 50px 50px;
-  background-size: 50px 50px;
-  background-image: -webkit-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
-  background-image: -ms-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
-  background-image: -o-linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(-45deg, rgba(255, 68, 26, .10) 25%, transparent 25%, transparent 50%, rgba(255, 68, 26, .10) 50%, rgba(255, 68, 26, .10) 75%, transparent 75%, transparent);
-
-  ul.chosen-choices {
-    background-color: transparent;
   }
 }
 

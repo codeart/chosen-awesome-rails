@@ -5,6 +5,7 @@ class Chosen
     $.extend(@, $.extend($.extend($.extend({}, Chosen.defaults), @constructor.defaults), options))
 
     @$body = $("body")
+    @$window = $(window)
     @target = @$target[0]
     @parser = new Chosen.Parser(@)
     @default_values = $.map @parser.selected_options, (option) -> option
@@ -357,21 +358,43 @@ class Chosen
   update_dropdown_position: ->
     return unless @opened
 
-    offsets = @$container.offset()
     rect = @$container[0].getBoundingClientRect()
-    border_width = parseInt(@$container.css("border-bottom-width"))
+    rect.width  ||= rect.right - rect.left
+    rect.height ||= rect.bottom - rect.top
 
-    if rect.width
-      width = rect.width
-      height = rect.height
-    else
-      width = rect.right - rect.left
-      height = rect.bottom - rect.top
+    offsets = @$container.offset()
+    offsets.bottom = @$body.height() - (offsets.top + rect.height)
+
+    border_width = parseInt(@$container.css("border-bottom-width"))
+    upside = false
+
+    viewport_top    = rect.top;
+    viewport_bottom = @$window.height() - rect.bottom;
+    viewport_height = viewport_bottom
+
+    if viewport_bottom < 250 and viewport_top > viewport_bottom
+      viewport_height = viewport_top
+      upside = true
 
     @$dropdown.css
-      left: "#{offsets.left}px",
-      top: "#{offsets.top + height - border_width}px"
-      width: "#{width}px"
+      top:       "initial"
+      bottom:    "initial"
+      left:      "#{offsets.left}px"
+      width:     "#{rect.width}px"
+      maxHeight: "#{(if viewport_height > 300 then 300 else viewport_height) + border_width}px"
+
+    if upside
+      @$dropdown.addClass("upside").removeClass("downside")
+      @$container.addClass("upside").removeClass("downside")
+
+      @$dropdown.css
+        bottom: "#{offsets.bottom + rect.height - border_width}px"
+    else
+      @$dropdown.addClass("downside").removeClass("upside")
+      @$container.addClass("downside").removeClass("upside")
+
+      @$dropdown.css
+        top:    "#{offsets.top + rect.height - border_width}px"
 
   update_dropdown_content: ->
     @insert_suggestion()
