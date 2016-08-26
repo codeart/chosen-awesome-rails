@@ -6,10 +6,26 @@ class Chosen.Multiple extends Chosen
 
     @pending_option = null
 
+  bind_events: ->
+    super
+
+    for option in @parser.selected()
+      @bind_option_events(option)
+
+  unbind_events: ->
+    super
+
+    for option in @parser.selected()
+      @unbind_option_events(option)
+
   bind_option_events: (option) ->
     option.$choice.find("a").unbind().
       bind("mousedown", -> false).
       bind("click", (evt) => @deselect_choice(evt))
+    return
+
+  unbind_option_events: (option) ->
+    option.$choice.find("a").unbind()
     return
 
   set_default_value: ->
@@ -126,7 +142,6 @@ class Chosen.Multiple extends Chosen
 
   load: ->
     for option in @parser.selected()
-      @bind_option_events(option)
       @$container.$search_container.before(option.$choice)
 
     return @
