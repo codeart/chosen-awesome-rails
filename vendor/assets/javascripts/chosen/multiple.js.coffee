@@ -111,7 +111,7 @@ class Chosen.Multiple extends Chosen
     option.$choice.remove()
     @update_dropdown_position()
 
-    @$target.trigger("change")
+    @$target.trigger("change", [{ chosen: true }])
     return @
 
   select: (option) ->
@@ -125,7 +125,7 @@ class Chosen.Multiple extends Chosen
     @bind_option_events(option)
     @close()
 
-    @$target.trigger("change")
+    @$target.trigger("change", [{ chosen: true }])
     return @
 
   deselect_all: ->

@@ -19,15 +19,17 @@ class Chosen
 
     @build()
     @load()
+    @refresh()
 
     Chosen.pool.push(@)
 
-    @set_state()
-
-    @$target.after(@$container).bind("chosen:update", (evt) => @set_state())
+    @$target.after(@$container)
+      .on("change chosen:update", (evt, data) => @refresh(evt, data))
+      .on("invalid", (evt) => @invalid(evt))
 
   destroy: ->
-    @$target.unbind "chosen:update"
+    @$target.unbind "change chosen:update"
+    @$target.unbind "invalid"
 
     @unbind_events()
 
@@ -49,13 +51,20 @@ class Chosen
     index = Chosen.pool.indexOf(@)
     Chosen.pool.splice(index, 1) if index >= 0
 
-  set_state: ->
+  refresh: (evt, data) ->
+    if typeof data is "object" and data.chosen
+      return true
+
     if @target.disabled
       @disabled = false
       @disable()
     else
       @disabled = true
       @enable()
+
+  invalid: (evt, data) ->
+    # TODO: html5 validations, error in console
+    return true
 
   reset: ->
     @deselect_all()
@@ -376,7 +385,7 @@ class Chosen
       viewport_height = viewport_top
       upside = true
 
-    @$dropdown.css
+    options =
       top:       "initial"
       bottom:    "initial"
       left:      "#{offsets.left}px"
@@ -387,14 +396,14 @@ class Chosen
       @$dropdown.addClass("upside").removeClass("downside")
       @$container.addClass("upside").removeClass("downside")
 
-      @$dropdown.css
-        bottom: "#{offsets.bottom + rect.height - border_width}px"
+      options.bottom = "#{offsets.bottom + rect.height - border_width}px"
     else
       @$dropdown.addClass("downside").removeClass("upside")
       @$container.addClass("downside").removeClass("upside")
 
-      @$dropdown.css
-        top:    "#{offsets.top + rect.height - border_width}px"
+      options.top = "#{offsets.top + rect.height - border_width}px"
+
+    @$dropdown.css(options)
 
   update_dropdown_content: ->
     @insert_suggestion()
@@ -502,11 +511,11 @@ class Chosen
         query: @$container.$search[0].value
 
       @ajax.pending_request = $.ajax
-        url: @ajax.url
-        type: @ajax.type or "get"
-        dataType: @ajax.dataType or "json"
-        data: $.extend(@ajax.data || {}, data)
-        async: @ajax.async or true
+        url:       @ajax.url
+        type:      @ajax.type or "get"
+        dataType:  @ajax.dataType or "json"
+        data:      $.extend(@ajax.data || {}, data)
+        async:     @ajax.async or true
         xhrFields: @ajax.xhrFields
 
         beforeSend: (xhr) =>
@@ -517,7 +526,6 @@ class Chosen
           @redraw_dropdown(data)
         error: =>
           @error()
-
     , 300
 
     return @
@@ -529,15 +537,15 @@ class Chosen
     not Chosen.is_crappy_browser(6)
 
   @defaults:
-    allow_insertion: false
-    inherit_classes: true
-    is_rtl: false
-    option_parser: null
+    allow_insertion:  false
+    inherit_classes:  true
+    is_rtl:           false
+    option_parser:    null
     option_formatter: null
     locale:
-      no_results: "No results found"
+      no_results:   "No results found"
       start_typing: "Please start typing"
-      add_new: "add new"
+      add_new:      "add new"
 
   @pool: []
 
