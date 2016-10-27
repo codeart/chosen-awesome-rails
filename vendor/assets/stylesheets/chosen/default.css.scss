@@ -28,7 +28,6 @@ $icon_delete_color_hover: #333 !default;
   position: relative;
   display: flex !important;
   align-items: center !important;
-  height: auto !important;
   outline: none;
   cursor: default;
   border-width: $border_width;
@@ -129,6 +128,8 @@ $icon_delete_color_hover: #333 !default;
   &.single { }
 
   &.multiple {
+    height: auto !important;
+
     ul.chosen-choices {
       li.chosen-option {
         padding: 0 3px 0 0;
