@@ -39,6 +39,9 @@ class Chosen
     @$dropdown.remove()
     @$target.removeData("chosen").removeClass("chosen").show()
 
+    if @$container.$search[0].required
+      @target.required = true
+
     delete @$container
     delete @$dropdown
     delete @$target
@@ -94,13 +97,21 @@ class Chosen
 
     container_props.title = @target.title if @target.title.length
     container_props.id = @target.id.replace(/[^\w]/g, '-') + "-chosen" if @target.id
-    placeholder = @$target.attr("placeholder") || @placeholder
+
+    input_attrs =
+      autocomplete: "off"
+      tabindex:     @target.tabindex || "0"
+      placeholder:  @$target.attr("placeholder") || @placeholder
+
+    if @target.required
+      input_attrs.required = @target.required
+      @target.required = false
 
     @$container = $("<div />", container_props)
-    @$container.html "<ul class=\"chosen-choices\"><li class=\"chosen-search-field\"><input type=\"text\" placeholder=\"#{placeholder}\" autocomplete=\"off\" /></li></ul>"
+    @$container.html "<ul class=\"chosen-choices\"><li class=\"chosen-search-field\"><input type=\"text\" /></li></ul>"
     @$container.$choices = @$container.find("ul.chosen-choices")
     @$container.$search_container = @$container.$choices.find("li.chosen-search-field")
-    @$container.$search = @$container.$choices.find("input[type=text]").attr(tabindex: @target.tabindex || "0")
+    @$container.$search = @$container.$choices.find("input[type=text]").attr(input_attrs)
 
     dropdown_classes = ["chosen-dropdown"]
 
