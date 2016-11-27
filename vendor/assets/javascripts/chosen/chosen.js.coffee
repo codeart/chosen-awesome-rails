@@ -63,9 +63,6 @@ class Chosen
       @disabled = true
       @enable()
 
-  invalid: (evt, data) ->
-    return not @parser.selected().length
-
   reset: ->
     @deselect_all()
 
@@ -102,6 +99,7 @@ class Chosen
 
     if @target.required
       input_attrs.required = @target.required
+      input_attrs["data-required"] = @target.required
       @target.required = false
 
     @$container = $("<div />", container_props)
@@ -172,11 +170,12 @@ class Chosen
       @open()
       evt.stopImmediatePropagation()
 
-    @$container.$search.bind "keydown", (evt) => @keydown(evt)
-    @$container.$search.bind "keyup",   (evt) => @keyup(evt)
-    @$container.$search.bind "focus",   (evt) => @focus(evt)
-    @$container.$search.bind "blur",    (evt) => @blur(evt)
-    @$container.$search.bind "invalid", (evt) => @invalid(evt)
+    @$container.$search.bind "keydown", $.proxy(@keydown, @)
+    @$container.$search.bind "keyup",   $.proxy(@keyup, @)
+    @$container.$search.bind "focus",   $.proxy(@focus, @)
+    @$container.$search.bind "blur",    $.proxy(@blur, @)
+
+    @$target.bind "change", $.proxy(@change, @)
 
     return true
 
@@ -184,11 +183,19 @@ class Chosen
     if @target.id.length
       $("label[for=#{@target.id}]").unbind "click"
 
+    @$target.unbind "change", @change
+
     @$dropdown.unbind()
     @$container.$search.unbind()
     @$container.unbind()
 
     return true
+
+  change: (evt) ->
+    if @parser.selected().length
+      @$container.$search.removeAttr("required")
+    else if @$container.$search.data("required")
+      @$container.$search.attr("required", "required")
 
   activate: ->
     @$container.$search.trigger("focus")
