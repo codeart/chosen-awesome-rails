@@ -25,11 +25,9 @@ class Chosen
 
     @$target.after(@$container)
       .on("change chosen:update", (evt, data) => @refresh(evt, data))
-      .on("invalid", (evt) => @invalid(evt))
 
   destroy: ->
     @$target.unbind "change chosen:update"
-    @$target.unbind "invalid"
 
     @unbind_events()
 
@@ -66,8 +64,7 @@ class Chosen
       @enable()
 
   invalid: (evt, data) ->
-    # TODO: html5 validations, error in console
-    return true
+    return not @parser.selected().length
 
   reset: ->
     @deselect_all()
@@ -176,9 +173,10 @@ class Chosen
       evt.stopImmediatePropagation()
 
     @$container.$search.bind "keydown", (evt) => @keydown(evt)
-    @$container.$search.bind "keyup", (evt) => @keyup(evt)
-    @$container.$search.bind "focus", (evt) => @focus(evt)
-    @$container.$search.bind "blur", (evt) => @blur(evt)
+    @$container.$search.bind "keyup",   (evt) => @keyup(evt)
+    @$container.$search.bind "focus",   (evt) => @focus(evt)
+    @$container.$search.bind "blur",    (evt) => @blur(evt)
+    @$container.$search.bind "invalid", (evt) => @invalid(evt)
 
     return true
 
