@@ -63,6 +63,11 @@ class Chosen
       @disabled = true
       @enable()
 
+  required: (value) ->
+    @$container.$search.attr
+      "required":      value
+      "data-required": value
+
   reset: ->
     @deselect_all()
 
