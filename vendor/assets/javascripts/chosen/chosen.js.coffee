@@ -52,30 +52,6 @@ class Chosen
     index = Chosen.pool.indexOf(@)
     Chosen.pool.splice(index, 1) if index >= 0
 
-  refresh: (evt, data) ->
-    if typeof data is "object" and data.chosen
-      return true
-
-    if @target.disabled
-      @disabled = false
-      @disable()
-    else
-      @disabled = true
-      @enable()
-
-  required: (value) ->
-    @$container.$search.attr
-      "required":      value
-      "data-required": value
-
-  reset: ->
-    @deselect_all()
-
-    $.each @default_values, (index, option) =>
-      @parser.restore(option)
-
-    @load()
-
   build: ->
     select_classes = ["chosen-container"]
 
@@ -103,7 +79,7 @@ class Chosen
       placeholder:  @$target.attr("placeholder") || @placeholder
 
     if @target.required
-      input_attrs.required = @target.required
+      input_attrs.required = @target.required and not @parser.selected().length
       input_attrs["data-required"] = @target.required
       @target.required = false
 
@@ -196,11 +172,35 @@ class Chosen
 
     return true
 
-  change: (evt) ->
+  reset: ->
+    @deselect_all()
+
+    $.each @default_values, (index, option) =>
+      @parser.restore(option)
+
+    @load()
+
+  refresh: (evt, data) ->
+    if typeof data is "object" and data.chosen
+      return true
+
+    if @target.disabled
+      @disabled = false
+      @disable()
+    else
+      @disabled = true
+      @enable()
+
+  change: ->
     if @parser.selected().length
       @$container.$search.removeAttr("required")
     else if @$container.$search.data("required")
       @$container.$search.attr("required", "required")
+
+  required: (value) ->
+    @$container.$search.attr
+      "required":      value
+      "data-required": value
 
   activate: ->
     @$container.$search.trigger("focus")
