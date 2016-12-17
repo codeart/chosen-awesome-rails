@@ -181,6 +181,7 @@ class Chosen
     @load()
 
   refresh: (evt, data) ->
+    # Event triggered inside chosen
     if typeof data is "object" and data.chosen
       return true
 
@@ -191,7 +192,11 @@ class Chosen
       @disabled = true
       @enable()
 
-  change: ->
+  change: (evt, data) ->
+    # Event triggered outside of chosen, sync with external changes
+    if not data or not data.chosen
+      @parser.sync()
+
     if @parser.selected().length
       @$container.$search.removeAttr("required")
     else if @$container.$search.data("required")

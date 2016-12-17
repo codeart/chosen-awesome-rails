@@ -56,16 +56,16 @@ class Chosen.Single extends Chosen
 
     return
 
-  deselect: (option) ->
+  deselect: (option, trigger_event = true) ->
     @parser.deselect(option || @parser.selected()[0])
 
     @set_default_value()
     @close()
 
-    @$target.trigger("change", [{ chosen: true }])
+    @$target.trigger("change", [{ chosen: true }]) if trigger_event
     return @
 
-  select: (option) ->
+  select: (option, trigger_event = true) ->
     return @ if not option or option.disabled or option.selected
 
     @parser.deselect(@parser.selected()[0])
@@ -74,7 +74,7 @@ class Chosen.Single extends Chosen
     @set_default_value()
     @close()
 
-    @$target.trigger("change", [{ chosen: true }])
+    @$target.trigger("change", [{ chosen: true }]) if trigger_event
     return @
 
   deselect_all: ->

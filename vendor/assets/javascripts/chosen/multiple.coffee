@@ -105,16 +105,16 @@ class Chosen.Multiple extends Chosen
 
     return @
 
-  deselect: (option) ->
+  deselect: (option, trigger_event = true) ->
     @parser.deselect(option)
 
     option.$choice.remove()
     @update_dropdown_position()
 
-    @$target.trigger("change", [{ chosen: true }])
+    @$target.trigger("change", [{ chosen: true }]) if trigger_event
     return @
 
-  select: (option) ->
+  select: (option, trigger_event = true) ->
     return @ if not option or option.disabled or option.selected
 
     @parser.select(option)
@@ -125,7 +125,7 @@ class Chosen.Multiple extends Chosen
     @bind_option_events(option)
     @close()
 
-    @$target.trigger("change", [{ chosen: true }])
+    @$target.trigger("change", [{ chosen: true }]) if trigger_event
     return @
 
   deselect_all: ->

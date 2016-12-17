@@ -68,6 +68,13 @@ class Chosen.Parser
     @order()
     return @
 
+  sync: ->
+    for option in @all_options
+      if option.$option[0].selected and @selected_options.indexOf(option) < 0
+        @chosen.select(option, false)
+      else if not option.$option[0].selected and @selected_options.indexOf(option) >= 0
+        @chosen.deselect(option, false)
+
   update: (data) ->
     parser = @chosen.option_parser || @default_parser
     selected_options = []
@@ -172,8 +179,9 @@ class Chosen.Parser
     option.$choice.addClass("selected")
     option.selected = true
 
-    index = @selectable_options.indexOf(option)
-    @selectable_options.splice(index, 1) unless index is -1
+    if (index = @selectable_options.indexOf(option)) >= 0
+      @selectable_options.splice(index, 1)
+
     @selected_options.push(option)
 
     return @
@@ -186,8 +194,9 @@ class Chosen.Parser
     option.$choice.removeClass("selected")
     option.selected = false
 
-    index = @selected_options.indexOf(option)
-    @selected_options.splice(index, 1) unless index is -1
+    if (index = @selected_options.indexOf(option)) >= 0
+      @selected_options.splice(index, 1)
+
     @selectable_options.push(option)
 
     return @
