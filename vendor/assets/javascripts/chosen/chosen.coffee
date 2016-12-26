@@ -23,7 +23,7 @@ class Chosen
 
     Chosen.pool.push(@)
 
-    @$target.after(@$container)
+    @$target.before(@$container)
       .on("change chosen:update", (evt, data) => @refresh(evt, data))
 
   destroy: ->
