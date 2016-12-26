@@ -1,0 +1,86 @@
+.chosen-container {
+  > a.chosen-delete {
+    right: 22px;
+  }
+
+  ul.chosen-choices {
+    li.chosen-search-field {
+      input {
+        padding: 0;
+        height: 100%;
+      }
+    }
+  }
+
+  &.loading {
+    background-image: -webkit-linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+    background-image: -ms-linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(-45deg, rgba(52, 194, 227, .10) 25%, transparent 25%, transparent 50%, rgba(52, 194, 227, .10) 50%, rgba(52, 194, 227, .10) 75%, transparent 75%, transparent);
+
+    ul.chosen-choices {
+      background-color: transparent;
+    }
+  }
+
+  &.disabled {
+    background-color: $input-bg-disabled;
+  }
+
+  &.focus {
+    border-color: $input-border-focus;
+    @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(red($input-border-focus), green($input-border-focus), blue($input-border-focus), .6));
+  }
+
+  &.opened {
+    &.downside {
+      -webkit-border-bottom-left-radius: 0;
+      -webkit-border-bottom-right-radius: 0;
+      -moz-border-bottom-left-radius: 0;
+      -moz-border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &.upside {
+      -webkit-border-top-left-radius: 0;
+      -webkit-border-top-right-radius: 0;
+      -moz-border-top-left-radius: 0;
+      -moz-border-top-right-radius: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  }
+}
+
+.chosen-dropdown {
+  border-color: $input-border-focus;
+  @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
+
+  &.downside {
+    -webkit-border-bottom-left-radius: $border-radius-base;
+    -webkit-border-bottom-right-radius: $border-radius-base;
+    -moz-border-bottom-left-radius: $border-radius-base;
+    -moz-border-bottom-right-radius: $border-radius-base;
+    border-bottom-left-radius: $border-radius-base;
+    border-bottom-right-radius: $border-radius-base;
+
+    &.opened {
+      @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), -3px 2px 6px -2px rgba(red($input-border-focus), green($input-border-focus), blue($input-border-focus), .6), 3px 2px 6px -2px rgba(red($input-border-focus), green($input-border-focus), blue($input-border-focus), .6));
+    }
+  }
+
+  &.upside {
+    -webkit-border-top-left-radius: $border-radius-base;
+    -webkit-border-top-right-radius: $border-radius-base;
+    -moz-border-top-left-radius: $border-radius-base;
+    -moz-border-top-right-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base;
+    border-top-right-radius: $border-radius-base;
+
+    &.opened {
+      @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), -3px -2px 6px -2px rgba(red($input-border-focus), green($input-border-focus), blue($input-border-focus), .6), 3px -2px 6px -2px rgba(red($input-border-focus), green($input-border-focus), blue($input-border-focus), .6));
+    }
+  }
+}

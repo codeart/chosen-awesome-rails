@@ -1,7 +1,7 @@
 $arrow_image_path: image_path('chosen-arrow.gif') !default;
 
-$border_width:          1px;
-$border_style:          solid;
+$border_width:          1px !default;
+$border_style:          solid !default;
 $border_color_default:  #ccc !default;
 $border_color_active:   rgba(82, 168, 236, 1) !default;
 $border_color_disabled: #ccc !default;
@@ -310,7 +310,6 @@ $icon_delete_color_hover: #333 !default;
     li.chosen-option.selected.active {
       background-color: $background_color_disabled;
     }
-
   }
 }
 
