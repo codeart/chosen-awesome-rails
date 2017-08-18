@@ -6,7 +6,7 @@ end
 require 'chosen-awesome-rails/version'
 
 case ::Rails.version.to_s
-  when /^4/
+  when /^4|5/
     require 'chosen-awesome-rails/engine'
   when /^3\.[12]/
     require 'chosen-awesome-rails/engine3'
