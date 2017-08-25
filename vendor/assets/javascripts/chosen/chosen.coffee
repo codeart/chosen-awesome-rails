@@ -524,7 +524,7 @@ class Chosen
       0
 
   pull_updates: ->
-    return @ if not @ajax or not @$container.$search[0].value
+    return @ unless @ajax
 
     if @ajax.pending_update
       clearTimeout(@ajax.pending_update)
@@ -534,24 +534,28 @@ class Chosen
         @ajax.pending_request.abort()
 
       data =
-        query: @$container.$search[0].value
+        query: @$container.$search.val()
 
       @ajax.pending_request = $.ajax
         url:       @ajax.url
         type:      @ajax.type or "get"
         dataType:  @ajax.dataType or "json"
-        data:      $.extend(@ajax.data || {}, data)
+        data:      $.extend(data, @ajax.data or {})
         async:     @ajax.async or true
         xhrFields: @ajax.xhrFields
 
         beforeSend: (xhr) =>
           @loading()
-          @ajax.beforeSend(xhr) if typeof @ajax.beforeSend is "function"
+          @ajax.beforeSend?(arguments...)
         success: (data) =>
           @loaded()
+          @ajax.success?(arguments...)
           @redraw_dropdown(data)
         error: =>
           @error()
+          @ajax.error?(arguments...)
+        complete: =>
+          @ajax.complete?(arguments...)
     , 300
 
     return @
