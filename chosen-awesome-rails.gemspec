@@ -3,7 +3,7 @@
 
 Gem::Specification.new do |s|
   s.name = "chosen-awesome-rails".freeze
-  s.version = "1.0.3"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
