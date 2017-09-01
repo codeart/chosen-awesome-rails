@@ -53,23 +53,28 @@ class Chosen
     Chosen.pool.splice(index, 1) if index >= 0
 
   build: ->
-    select_classes = ["chosen-container"]
+    # TODO: improve iOS support
+    #  * don't pass focus to the search field when clicked (avoid virtual keyboard)
+    #  * add "tap for search" placeholder when dropdown is shown
+    #  * add "done" button next to the search field so iOS users can hide the virtual keyboard
+    is_ios = Chosen.is_ios()
+    container_classes = ["chosen-container"]
 
-    select_classes.push if @is_multiple then "multiple" else "single"
-    select_classes.push "rtl" if @is_rtl
-    select_classes.push @target.className if @inherit_classes and @target.className
+    container_classes.push "ios" if is_ios
+    container_classes.push if @is_multiple then "multiple" else "single"
+    container_classes.push "rtl" if @is_rtl
+    container_classes.push @target.className if @inherit_classes and @target.className
 
     container_props =
-      class: select_classes.join ' '
+      class: container_classes.join ' '
       css: if @width then { width: @width } else @getCSSProperties(@target, ["width", "min-width", "max-width"])
 
     @$target.addClass("chosen")
+    @$target.addClass("ios") if is_ios
 
     attrs = @getCSSProperties(@target, ["height"])
 
-    if attrs.height
-      container_props.css['min-height'] = attrs.height
-
+    container_props.css['min-height'] = attrs.height if attrs.height
     container_props.title = @target.title if @target.title.length
     container_props.id = @target.id.replace(/[^\w]/g, '-') + "-chosen" if @target.id
 
@@ -83,12 +88,6 @@ class Chosen
       input_attrs["data-required"] = @target.required
       @target.required = false
 
-    @$container = $("<div />", container_props)
-    @$container.html "<ul class=\"chosen-choices\"><li class=\"chosen-search-field\"><input type=\"text\" /></li></ul>"
-    @$container.$choices = @$container.find("ul.chosen-choices")
-    @$container.$search_container = @$container.$choices.find("li.chosen-search-field")
-    @$container.$search = @$container.$choices.find("input[type=text]").attr(input_attrs)
-
     dropdown_classes = ["chosen-dropdown"]
 
     dropdown_classes.push if @is_multiple then "multiple" else "single"
@@ -98,6 +97,12 @@ class Chosen
       class: dropdown_classes.join ' '
       unselectable: "on"
       html: "<ul></ul>"
+
+    @$container = $("<div />", container_props)
+    @$container.html "<ul class=\"chosen-choices\"><li class=\"chosen-search-field\"><input type=\"text\" /></li></ul>"
+    @$container.$choices = @$container.find("ul.chosen-choices")
+    @$container.$search_container = @$container.$choices.find("li.chosen-search-field")
+    @$container.$search = @$container.$choices.find("input[type=text]").attr(input_attrs)
 
     @$dropdown = $("<div />", dropdown_props)
     @$dropdown.$list = @$dropdown.find("ul").first()
@@ -560,8 +565,11 @@ class Chosen
 
     return @
 
+  @is_ios: ->
+    /iPad|iPhone|iPod/.test(navigator.userAgent) and not window.MSStream
+
   @is_crappy_browser: (version) ->
-    window.navigator.appName == "Microsoft Internet Explorer" and document.documentMode <= version
+    window.navigator.appName is "Microsoft Internet Explorer" and document.documentMode <= version
 
   @is_supported: ->
     not Chosen.is_crappy_browser(6)

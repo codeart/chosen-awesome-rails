@@ -20,7 +20,7 @@ $placeholder_color: #989898 !default;
 $icon_delete_color:       #777 !default;
 $icon_delete_color_hover: #333 !default;
 
-.chosen {
+.chosen:not(.ios) {
   display: none !important;
 }
 
@@ -35,6 +35,10 @@ $icon_delete_color_hover: #333 !default;
   border-color: $border_color_default;
   background-color: $background_color_default;
   zoom: 1;
+
+  &.ios {
+    display: none !important;
+  }
 
   a.chosen-delete {
     padding: 0 5px;
