@@ -106,6 +106,7 @@ class Chosen
 
     @$dropdown = $("<div />", dropdown_props)
     @$dropdown.$list = @$dropdown.find("ul").first()
+    @$dropdown.$list.$has_more = $("<li />", class: "chosen-hasmore")
     @$dropdown.$list.$no_results = $("<li />", class: "chosen-noresults")
     @$dropdown.$list.suggestion = null
 
@@ -285,7 +286,7 @@ class Chosen
 
     @$dropdown.bind "mouseover", "li.chosen-option", (evt) => @dropdown_mouseover(evt)
     @$dropdown.bind "mousedown", "li.chosen-option", (evt) => @dropdown_mousedown(evt)
-    @$dropdown.bind "mousewheel DOMMouseScroll",     (evt) => @dropdown_scroll(evt)
+    @$dropdown.bind "mousewheel DOMMouseScroll scroll", (evt) => @dropdown_scroll(evt)
 
     @$container.addClass("opened")
     @$dropdown.addClass("opened")
@@ -297,6 +298,7 @@ class Chosen
 
     @$container.removeClass("opened")
     @$dropdown.removeClass("opened")
+    @$dropdown.$list.$has_more.unbind()
     @$dropdown.unbind "mouseover mousedown mousewheel DOMMouseScroll"
     @$dropdown.remove()
     @opened = false
@@ -339,19 +341,20 @@ class Chosen
     return
 
   dropdown_scroll: (evt) ->
-    delta = evt.originalEvent.wheelDelta || -evt.originalEvent.detail
+    delta  = evt.originalEvent.wheelDelta || -evt.originalEvent.detail
+    bottom = @$dropdown.$list[0].scrollHeight - @$dropdown.scrollTop() <= @$dropdown.innerHeight()
+    top    = @$dropdown.scrollTop() <= 0
 
-    if (delta < 0 and @$dropdown.$list[0].scrollHeight - @$dropdown.scrollTop() <= @$dropdown.innerHeight())
+    if delta and ((delta < 0 and bottom) or (delta > 0 and top))
+      evt.preventDefault()
+      evt.stopImmediatePropagation()
+    else if delta and delta > 0 and top
       evt.preventDefault()
       evt.stopImmediatePropagation()
 
-      # Try pulling next pages
-      if @ajax
-        @pull_next_page()
-
-    else if (delta > 0 and @$dropdown.scrollTop() <= 0)
-      evt.preventDefault()
-      evt.stopImmediatePropagation()
+    # Try pulling next pages when at bottom
+    if bottom
+      @pull_next_page()
 
     return
 
@@ -448,6 +451,9 @@ class Chosen
 
     if @parser.selectable_options.length
       @$dropdown.$list.html(@parser.to_html())
+
+      if @ajax and @ajax.has_more isnt false
+        @show_has_more()
     else
       @show_no_results()
 
@@ -471,6 +477,11 @@ class Chosen
       suggestion.$choice.contents().last()[0].nodeValue = value
     else if @$dropdown.$list.suggestion
       @$dropdown.$list.suggestion = null
+
+  show_has_more: ->
+    @$dropdown.$list.$has_more.text(@locale.has_more)
+    @$dropdown.$list.append(@$dropdown.$list.$has_more)
+    @$dropdown.$list.$has_more.one "click", => @pull_next_page()
 
   show_no_results: ->
     text = if @ajax then @locale.start_typing else @locale.no_results
@@ -639,6 +650,7 @@ class Chosen
       no_results:   "No results found"
       start_typing: "Please start typing"
       add_new:      "add new"
+      has_more:     "Load more options"
 
   @pool: []
 

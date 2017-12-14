@@ -271,7 +271,7 @@ $icon_delete_color_hover: #333 !default;
       word-wrap: break-word;
     }
 
-    li.chosen-noresults {
+    li.chosen-noresults, li.chosen-hasmore {
       color: $color_active;
       background-color: $background_color_active;
     }
