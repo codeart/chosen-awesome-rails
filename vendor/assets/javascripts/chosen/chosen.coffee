@@ -555,7 +555,7 @@ class Chosen
         @ajax.pending_update_request.abort()
 
       # Reset current page and has_more flag
-      delete @ajax.data.page
+      delete @ajax.data.page if @ajax.data
       delete @ajax.has_more
 
       data =
@@ -592,6 +592,7 @@ class Chosen
     if @ajax.pending_next_page_request and @ajax.pending_next_page_request.readyState isnt 4
       return @
 
+    @ajax.data ||= {}
     @ajax.data.page = if @ajax.data.page then @ajax.data.page + 1 else 2
 
     data =
