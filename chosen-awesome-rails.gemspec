@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.authors = ["heaven".freeze]
   s.date = "2017-12-14"
   s.description = "Chosen is a javascript library of select box enhancer for jQuery, integrates with Rails asset pipeline for ease of use.".freeze
-  s.email = ["alex@codeart.pw".freeze]
+  s.email = ["hello@codeart.us".freeze]
   s.files = [".gitignore".freeze, "Gemfile".freeze, "Gemfile.lock".freeze, "LICENSE.txt".freeze, "README.md".freeze, "Rakefile".freeze, "chosen-awesome-rails.gemspec".freeze, "lib/chosen-awesome-rails.rb".freeze, "lib/chosen-awesome-rails/engine.rb".freeze, "lib/chosen-awesome-rails/engine3.rb".freeze, "lib/chosen-awesome-rails/version.rb".freeze, "vendor/assets/images/chosen-arrow.gif".freeze, "vendor/assets/javascripts/chosen.coffee".freeze, "vendor/assets/javascripts/chosen/chosen.coffee".freeze, "vendor/assets/javascripts/chosen/multiple.coffee".freeze, "vendor/assets/javascripts/chosen/parser.coffee".freeze, "vendor/assets/javascripts/chosen/single.coffee".freeze, "vendor/assets/stylesheets/chosen.scss".freeze, "vendor/assets/stylesheets/chosen/_bootstrap2.scss".freeze, "vendor/assets/stylesheets/chosen/_bootstrap3.scss".freeze, "vendor/assets/stylesheets/chosen/_default.scss".freeze]
   s.homepage = "https://github.com/heaven/chosen-awesome-rails".freeze
   s.rubygems_version = "2.6.12".freeze
