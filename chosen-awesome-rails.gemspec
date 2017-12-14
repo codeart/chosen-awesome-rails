@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: chosen-awesome-rails 1.3.0 ruby lib
+# stub: chosen-awesome-rails 1.3.1 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "chosen-awesome-rails".freeze
-  s.version = "1.3.0"
+  s.version = "1.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
