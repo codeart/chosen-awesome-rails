@@ -285,7 +285,7 @@ class Chosen
 
     @$dropdown.bind "mouseover", "li.chosen-option", (evt) => @dropdown_mouseover(evt)
     @$dropdown.bind "mousedown", "li.chosen-option", (evt) => @dropdown_mousedown(evt)
-    @$dropdown.bind "mousewheel DOMMouseScroll", (evt) => @prevent_page_scroll(evt)
+    @$dropdown.bind "mousewheel DOMMouseScroll",     (evt) => @dropdown_scroll(evt)
 
     @$container.addClass("opened")
     @$dropdown.addClass("opened")
@@ -338,11 +338,20 @@ class Chosen
     evt.stopImmediatePropagation()
     return
 
-  prevent_page_scroll: (evt) ->
+  dropdown_scroll: (evt) ->
     delta = evt.originalEvent.wheelDelta || -evt.originalEvent.detail
 
-    if (delta < 0 and @$dropdown.$list[0].scrollHeight - @$dropdown.scrollTop() == @$dropdown.innerHeight()) or (delta > 0 and @$dropdown.scrollTop() == 0)
+    if (delta < 0 and @$dropdown.$list[0].scrollHeight - @$dropdown.scrollTop() <= @$dropdown.innerHeight())
       evt.preventDefault()
+      evt.stopImmediatePropagation()
+
+      # Try pulling next pages
+      if @ajax
+        @pull_next_page()
+
+    else if (delta > 0 and @$dropdown.scrollTop() <= 0)
+      evt.preventDefault()
+      evt.stopImmediatePropagation()
 
     return
 
@@ -384,9 +393,7 @@ class Chosen
 
     return
 
-  redraw_dropdown: (data) ->
-    @parser.update(data) unless data is undefined
-
+  redraw_dropdown: ->
     changed = @apply_filter()
 
     @update_dropdown_position()
@@ -484,13 +491,19 @@ class Chosen
 
   move_selection: (dir) ->
     cursor = @parser.index_of(@cursor_option) + dir
-    cursor = @parser.available_options.length - 1 if cursor < 0
-    cursor = 0 if cursor > @parser.available_options.length - 1
+
+    if cursor > @parser.available_options.length - 1
+      if @ajax and @ajax.has_more isnt false
+        # Try pulling next pages
+        @pull_next_page(=> @move_selection(dir))
+
+      return @
+
+    return @ if cursor < 0
 
     @move_selection_to(cursor)
 
     if @cursor_option and @cursor_option.selected and @parser.selectable_options.length
-      # TODO: optimize this, could be slow on large lists
       return @move_selection(dir)
 
     return @
@@ -504,12 +517,15 @@ class Chosen
     return unless @cursor_option
 
     $element = @cursor_option.$listed.addClass("active")
-    top = $element.position().top + $element.height()
+    top = $element.position().top
+    bottom = top + $element.outerHeight()
     list_height = @$dropdown.height()
     list_scroll = @$dropdown.scrollTop()
 
-    if top >= list_height + list_scroll or list_scroll >= top
-      @$dropdown.scrollTop($element.position().top)
+    if bottom >= list_height + list_scroll
+      @$dropdown.scrollTop(bottom - list_height)
+    else if list_scroll >= top
+      @$dropdown.scrollTop(top)
 
     return @
 
@@ -535,13 +551,17 @@ class Chosen
       clearTimeout(@ajax.pending_update)
 
     @ajax.pending_update = setTimeout =>
-      if @ajax.pending_request and @ajax.pending_request.readyState isnt 4
-        @ajax.pending_request.abort()
+      if @ajax.pending_update_request and @ajax.pending_update_request.readyState isnt 4
+        @ajax.pending_update_request.abort()
+
+      # Reset current page and has_more flag
+      delete @ajax.data.page
+      delete @ajax.has_more
 
       data =
         query: @$container.$search.val()
 
-      @ajax.pending_request = $.ajax
+      @ajax.pending_update_request = $.ajax
         url:       @ajax.url
         type:      @ajax.type or "get"
         dataType:  @ajax.dataType or "json"
@@ -555,13 +575,47 @@ class Chosen
         success: (data) =>
           @loaded()
           @ajax.success?(arguments...)
-          @redraw_dropdown(data)
+          @parser.update(data) unless data is undefined
+          @redraw_dropdown()
         error: =>
           @error()
           @ajax.error?(arguments...)
         complete: =>
           @ajax.complete?(arguments...)
     , 300
+
+    return @
+
+  pull_next_page: (cb) ->
+    return @ unless @ajax and @ajax.has_more isnt false
+
+    if @ajax.pending_next_page_request and @ajax.pending_next_page_request.readyState isnt 4
+      return @
+
+    @ajax.data.page = if @ajax.data.page then @ajax.data.page + 1 else 2
+
+    data =
+      query: @$container.$search.val()
+
+    @ajax.pending_next_page_request = $.ajax
+      url:       @ajax.url
+      type:      @ajax.type or "get"
+      dataType:  @ajax.dataType or "json"
+      data:      $.extend(data, @ajax.data or {})
+      async:     @ajax.async or true
+      xhrFields: @ajax.xhrFields
+
+      beforeSend: (xhr) =>
+        @loading()
+      success: (data) =>
+        @loaded()
+        @ajax.has_more = !!data.length
+        @parser.append(data) unless data is undefined
+        @redraw_dropdown()
+        cb() if cb
+      error: =>
+        @ajax.data.page = if @ajax.data.page is 2 then null else @ajax.data.page - 1
+        @error()
 
     return @
 
