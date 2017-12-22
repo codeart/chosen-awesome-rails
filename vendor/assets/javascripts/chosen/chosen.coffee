@@ -27,6 +27,7 @@ class Chosen
       .on("change chosen:update", (evt, data) => @refresh(evt, data))
 
   destroy: ->
+    @destroyed = true
     @$target.unbind "change chosen:update"
 
     @unbind_events()
@@ -568,6 +569,7 @@ class Chosen
       # Reset current page and has_more flag
       delete @ajax.data.page if @ajax.data
       delete @ajax.has_more
+      return @ if @destroyed
 
       data =
         query: @$container.$search.val()
@@ -584,14 +586,17 @@ class Chosen
           @loading()
           @ajax.beforeSend?(arguments...)
         success: (data) =>
+          return if @destroyed
           @loaded()
           @ajax.success?(arguments...)
           @parser.update(data) unless data is undefined
           @redraw_dropdown()
         error: =>
+          return if @destroyed
           @error()
           @ajax.error?(arguments...)
         complete: =>
+          return if @destroyed
           @ajax.complete?(arguments...)
     , 300
 
@@ -622,11 +627,13 @@ class Chosen
       success: (data) =>
         @loaded()
         @ajax.has_more = !!data.length
+        return if @destroyed
         @parser.append(data) unless data is undefined
         @redraw_dropdown()
         cb() if cb
       error: =>
         @ajax.data.page = if @ajax.data.page is 2 then null else @ajax.data.page - 1
+        return if @destroyed
         @error()
 
     return @
