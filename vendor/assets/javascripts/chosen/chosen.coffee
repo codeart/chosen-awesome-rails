@@ -81,6 +81,7 @@ class Chosen
 
     input_attrs =
       autocomplete: "off"
+      role:         "presentation"
       tabindex:     @target.tabindex || "0"
       placeholder:  @$target.attr("placeholder") || @placeholder
 
