@@ -55,8 +55,10 @@ class Chosen.Parser
 
   parse: (selected_options = []) ->
     formatter = @chosen.option_formatter || @default_formatter
-    current_group_label = null
-    group = null
+
+    group       = null
+    group_label = null
+    group_id    = 0
 
     @all_options = []
     @selected_options = []
@@ -66,14 +68,16 @@ class Chosen.Parser
 
     @chosen.$target.find("option").each (index, option) =>
       if option.parentNode.nodeName is "OPTGROUP"
-        if current_group_label != option.parentNode.label
-          current_group_label = option.parentNode.label
-          group = $("<li />", class: "chosen-group", text: current_group_label)
+        if group_label != option.parentNode.label
+          group_label = option.parentNode.label
+          group = $("<li />", class: "chosen-group", text: group_label)
+          group.group_id = group_id
+          group_id += 1
       else
         group = null
 
       classes = "chosen-option"
-      classes += " group" if group
+      classes += " group"    if group
       classes += " selected" if option.selected
       classes += " disabled" if option.disabled
 
@@ -126,7 +130,7 @@ class Chosen.Parser
       value:      $option[0].value
       selected:   false
       disabled:   false
-      match_type: if append then null else 0
+      match_type: if append then null else -1
 
     if append
       @all_options.push chosen_option
@@ -235,7 +239,7 @@ class Chosen.Parser
 
   exact_matches: ->
     $.grep @available_options, (option) ->
-      option.match_type is 0
+      option.match_type is -1
 
   includes_blank: ->
     not not @blank_option()
@@ -246,66 +250,72 @@ class Chosen.Parser
 
     return null
 
-  apply_filter: (value) ->
-    @reset_filter()
-
-    if (value = $.trim(value))
-      scores = [
-        @all_options.length * 12, @all_options.length * 9
-        @all_options.length * 6, @all_options.length * 3
-        @all_options.length
-      ]
-
-      exact_query = value.toLowerCase()
-      query = exact_query.replace(Parser.escape_exp, "\\$&").split(" ")
-
-      expressions_collection = $.map(query, (word, index) ->
-        return [[
-          new RegExp("^#{word}$", "i"),
-          new RegExp("^#{word}", "i")
-          new RegExp("#{word}$", "i"),
-          new RegExp(word, "i")
-        ]]
-      )
-
-      for option in @all_options
-        if option.label.toLowerCase() is exact_query
-          option.match_type = 0
-        else
-          option.match_type = null
-
-        words = option.label.split(" ")
-
-        for word in words
-          for expressions in expressions_collection
-            for expression, index in expressions
-              if word.match(expression)
-                if option.match_type is null
-                  option.match_type = index + 1
-
-                option.score += scores[option.match_type]
-                break
-              else if index is expressions.length - 1
-                option.score -= 1
-
-    @order()
-    return @
-
   reset_filter: ->
     option.score = option.index * -1 for option in @all_options
     return @
 
-  order: ->
-    @all_options = @all_options.sort (a, b) ->
-      if a.score > b.score then -1 else if a.score < b.score then 1 else 0
+  apply_filter: (value) ->
+    @reset_filter()
 
+    if (value = $.trim(value))
+      num_options = @all_options.length
+      exact_query = value.toLowerCase()
+      query       = $.grep(exact_query.replace(Parser.escape_exp, "\\$&").split(/\W/), (s) -> s.length)
+
+      expressions_collection = $.map(query, (w, i) ->
+        return [[new RegExp("^#{w}$", "i"), new RegExp("^#{w}", "i"), new RegExp(w, "i")]]
+      )
+
+      for option in @all_options
+        option.score = 0
+
+        if option.label.toLowerCase() is exact_query
+          option.match_type = -1
+        else
+          option.match_type = null
+
+        words = $.grep(option.label.split(/\W/), (s) -> s.length)
+
+        for word, word_index in words
+          for expressions in expressions_collection
+            for expression, expression_index in expressions
+              if word.match(expression)
+                unless option.match_type is -1
+                  option.match_type = expression_index
+
+                option.score += num_options * (expressions.length - option.match_type) / (word_index + 1)
+                break
+              else if expression_index is expressions.length - 1
+                option.score -= num_options * expressions.length / words.length
+
+    @order()
+    return @
+
+  # Re-order all_options array keeping the optgroup order
+  order: ->
+    groups = {}
+
+    for option in @all_options
+      group_id = if option.$group then option.$group.group_id else -1
+      groups[group_id] ||= []
+      groups[group_id].push(option)
+
+    @all_options       = []
     @available_options = []
+
+    for own group_id, value of groups
+      @all_options = @all_options.concat(@order_group(value))
 
     for option in @all_options
       if not option.blank
         @available_options.push(option)
 
     return @
+
+  order_group: (group) ->
+    group
+      .sort (a, b) -> a.index - b.index
+      .sort (a, b) -> b.score - a.score
 
   default_parser: (attrs) ->
     value: attrs.value
