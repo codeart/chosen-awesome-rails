@@ -68,12 +68,12 @@ class Chosen
 
     container_props =
       class: container_classes.join ' '
-      css: if @width then { width: @width } else @getCSSProperties(@target, ["width", "min-width", "max-width"])
+      css: if @width then { width: @width } else Chosen.getCSSProperties(@target, ["width", "min-width", "max-width"])
 
     @$target.addClass("chosen")
     @$target.addClass("ios") if is_ios
 
-    attrs = @getCSSProperties(@target, ["height"])
+    attrs = Chosen.getCSSProperties(@target, ["height"])
 
     container_props.css['min-height'] = attrs.height if attrs.height
     container_props.title = @target.title if @target.title.length
@@ -112,35 +112,8 @@ class Chosen
     @$dropdown.$list.$no_results = $("<li />", class: "chosen-noresults")
     @$dropdown.$list.suggestion = null
 
-  getCSSProperties: (node, properties)->
-    attrs = {}
-    return attrs if Chosen.is_crappy_browser(8)
-
-    sheets = document.styleSheets
-    node.matches = node.matches or node.webkitMatchesSelector or node.mozMatchesSelector or node.msMatchesSelector or node.oMatchesSelector
-    matches = []
-
-    for i of sheets
-      try
-        rules = sheets[i].rules or sheets[i].cssRules
-      catch
-        continue
-
-      for r of rules
-        try
-          if node.matches(rules[r].selectorText)
-            matches.push rules[r].cssText
-        catch
-          continue
-
-    for p in properties
-      for m in matches
-        match = m.match(new RegExp("(?:\\s|;|^)#{p}:\\s*([^;]+)"))
-
-        if match
-          attrs[p] = match[1]
-
-    attrs
+  getCSSProperties: (node, properties) ->
+    Chosen.getCSSProperties(arguments...)
 
   bind_events: ->
     if @target.id.length
@@ -638,6 +611,45 @@ class Chosen
         @error()
 
     return @
+
+  @getCSSProperties: (node, properties) ->
+    attrs = {}
+    return attrs if Chosen.is_crappy_browser(8)
+
+    matches = []
+    sheets = document.styleSheets
+    node.matches = node.matches or node.webkitMatchesSelector or
+      node.mozMatchesSelector or node.msMatchesSelector or node.oMatchesSelector
+
+    for i of sheets
+      try
+        rules = sheets[i].rules or sheets[i].cssRules
+      catch
+        continue
+
+      Chosen.scanCSSRules(node, rules, matches)
+
+    for p in properties
+      for m in matches
+        match = m.match(new RegExp("(?:\\s|;|^)#{p}:\\s*([^;]+)"))
+
+        if match
+          attrs[p] = match[1]
+
+    attrs
+
+  @scanCSSRules: (node, rules, matches) ->
+    for r of rules
+      try
+        switch rules[r].type
+          when 1
+            if node.matches(rules[r].selectorText)
+              matches.push rules[r].cssText
+          when 4
+            if window.matchMedia and window.matchMedia(rules[r].media.mediaText).matches
+              Chosen.scanCSSRules(node, rules[r].rules or rules[r].cssRules, matches)
+      catch
+        continue
 
   @is_ios: ->
     /iPad|iPhone|iPod/.test(navigator.userAgent) and not window.MSStream
