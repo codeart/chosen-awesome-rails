@@ -283,7 +283,12 @@ class Chosen.Parser
                 unless option.match_type is -1
                   option.match_type = expression_index
 
-                option.score += num_options * (expressions.length - option.match_type) / (word_index + 1)
+                option.score += switch option.match_type
+                  when 0
+                    num_options * (expressions.length - option.match_type)
+                  else
+                    num_options * (expressions.length - option.match_type) / (word_index + 1)
+
                 break
               else if expression_index is expressions.length - 1
                 option.score -= num_options * expressions.length / words.length
