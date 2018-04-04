@@ -7,7 +7,7 @@ and makes them more user friendly (Ruby on Rails package). Out of the box ajax s
 
 ### Install chosen-awesome-rails gem
 
-Include `chosen-awesome-rails` in Gemefile
+Include `chosen-awesome-rails` in Gemfile
 
     gem 'chosen-awesome-rails'
     
