@@ -322,13 +322,19 @@ class Chosen.Parser
       .sort (a, b) -> a.index - b.index
       .sort (a, b) -> b.score - a.score
 
-  default_parser: (attrs) ->
+  escape_html: (unsafe) ->
+    unsafe
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;")
+
+  default_parser: (attrs) =>
     value: attrs.value
     text:  attrs.label
     data:  { source: attrs }
 
-  default_formatter: ($option) ->
-    value = $option.contents().text()
+  default_formatter: ($option) =>
+    value = @escape_html($option.contents().text())
     [value, value]
 
   build_reset_link: ->
