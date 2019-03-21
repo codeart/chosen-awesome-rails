@@ -307,7 +307,8 @@ class Chosen
     return
 
   dropdown_mousedown: (evt) ->
-    option = @parser.find_by_element(evt.target)
+    target = evt.target.closest('li')
+    option = @parser.find_by_element(target)
 
     @select(option) if option
 
