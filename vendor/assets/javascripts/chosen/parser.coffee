@@ -109,7 +109,7 @@ class Chosen.Parser
     return @
 
   insert: (option, append = false) ->
-    $option     = $("<option />", value: option.value, text: option.label)
+    $option     = $("<option />", value: option.value, text: option.label, data: { source: option })
     $reset_link = @build_reset_link()
 
     formatter = @chosen.option_formatter || @default_formatter

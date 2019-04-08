@@ -320,6 +320,7 @@ class Chosen
     delta  = evt.originalEvent.wheelDelta || -evt.originalEvent.detail
     bottom = @$dropdown.$list[0].scrollHeight - @$dropdown.scrollTop() <= @$dropdown.innerHeight()
     top    = @$dropdown.scrollTop() <= 0
+    query  = @$container.$search.val()
 
     if delta and ((delta < 0 and bottom) or (delta > 0 and top))
       evt.preventDefault()
@@ -329,7 +330,7 @@ class Chosen
       evt.stopImmediatePropagation()
 
     # Try pulling next pages when at bottom
-    if bottom
+    if bottom && query
       @pull_next_page()
 
     return
