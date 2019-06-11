@@ -298,7 +298,8 @@ class Chosen
     return @
 
   dropdown_mouseover: (evt) ->
-    option = @parser.find_by_element(evt.target)
+    target = evt.target.closest('li')
+    option = @parser.find_by_element(target)
 
     @move_selection_to(@parser.index_of(option)) if option
 
@@ -310,11 +311,14 @@ class Chosen
     target = evt.target.closest('li')
     option = @parser.find_by_element(target)
 
-    @select(option) if option
+    # Allow to click links
+    unless evt.target.tagName == "A"
+      @select(option) if option
 
-    evt.preventDefault()
-    evt.stopImmediatePropagation()
-    return
+      evt.preventDefault()
+      evt.stopImmediatePropagation()
+
+      return
 
   dropdown_scroll: (evt) ->
     delta  = evt.originalEvent.wheelDelta || -evt.originalEvent.detail
